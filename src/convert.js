@@ -1,7 +1,10 @@
 let expDegree = 0;
 let countBits = 1;
 let inputNum = 69.125;
+
 let outputArr = [];
+let hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+
 let tempNum = inputNum;
 
 console.log(inputNum);
@@ -68,6 +71,10 @@ for (i = 0; i < 23; i++) {
 for (i = 0; i < 32; i++) {
     process.stdout.write(outputArr[i].toString());
 }
+console.log();
+for (i = 0; i < 8; i++) {
+    process.stdout.write(convertToHex (outputArr[i * 4], outputArr[i * 4 + 1], outputArr[i * 4 + 2], outputArr[i * 4 + 3]));
+}
 
 
 // Convert integer to binary
@@ -92,5 +99,15 @@ function convertFract (srcNum) {
         }
     }
 
-    return dstArr
+    return dstArr;
+}
+
+// Convert nibble to hex
+function convertToHex (bit1, bit2, bit3, bit4) {
+    let hexIndex = bit4;
+    hexIndex += bit3 * 2;
+    hexIndex += bit2 * 4;
+    hexIndex += bit1 * 8;
+
+    return hexLib[hexIndex];
 }
