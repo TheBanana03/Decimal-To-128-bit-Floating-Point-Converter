@@ -52,7 +52,18 @@ class convert {
         let expBits = this.convertToBin(this.expSize, this.expDegree + this.expBias);
 
         this.pushToOutput (expBits, frcBits);
-        this.printOutput ();
+        //this.printOutput ();
+
+        // Return binary and hex strings
+        var binStr = "";
+        var hexStr = "";
+        for (i = 0; i < this.bitSize; i++) {
+            binStr += this.outputArr[i].toString();
+        }
+        for (i = 0; i < this.hexSize; i++) {
+            hexStr += this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]);
+        }
+        return {binStr, hexStr};
     }
 
     // Fill up output array
@@ -132,4 +143,5 @@ class convert {
     }
 }
 
-module.exports = convert;
+// Can't use module for browser
+// module.exports = convert;

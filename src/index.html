@@ -57,13 +57,13 @@
                 </div>
 
                 <div style="display: flex;">
-                    <label for=""> Binary:</label>
-                    <input type="string" id="output_binary" name="output_binary" disabled style="width: 20em;">
+                    <label for="output_binary">Binary:</label>
+                    <textarea id="output_binary" name="output_binary" disabled rows="4" cols="30"></textarea>
                 </div>
 
                 <div style="display: flex;">
                     <label for="input_decimal">Hexadecimal:</label>
-                    <input type="string" id="output_hex" name="output_hex" disabled style="width: 15em;">
+                    <textarea id="output_hex" name="output_hex" disabled rows="1" cols="30"></textarea>
                 </div>
 
             </form>
@@ -94,7 +94,8 @@
 
     </body>
 
-    <script type="text/javascript">
+    <script src="convert.js"></script>
+    <script type="text/JavaScript">
 
         // On form submit
         var input_form = document.getElementById("input_form");
@@ -110,13 +111,28 @@
             console.log(input_exponent);
             console.log(input_rounding);
 
+            // Declare outputs
+            var binary_output;
+            var hex_output;
+
             // TODO: Convert Logic Here
+            var IEEE754 = new convert(input_decimal, 128, 32, 16383, 15);
+            if (IEEE754) {
+                let output = IEEE754.process();
+                binary_output = output.binStr;
+                hex_output = output.hexStr;
+            } else {
+                console.log("Conversion failed.");
+            }
+
+            console.log(binary_output);
+            console.log(hex_output);
 
             // Display outputs
-            var output_binary = document.getElementById("output_binary");
-            var output_hex = document.getElementById("output_hex");
-            output_binary.value = "Your Binary Output";
-            output_hex.value = "Your Hexadecimal Output";
+            var output_binary_element = document.getElementById("output_binary");
+            var output_hex_element = document.getElementById("output_hex");
+            output_binary.value = binary_output;
+            output_hex.value = hex_output;
         });
 
     </script>
