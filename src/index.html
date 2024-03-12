@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>CSARCH2 S13 Group 4 Simulation Project</title>
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+
+    <link rel="stylesheet" href="">
+    <style>
+        /* * {
+            border-color: black;
+            border-width: 3em;
+            border-style: solid;
+        } */
+    </style>
+        
+    <body>
+
+        <h1 style="margin: auto; width: fit-content; padding: 1em;">Decimal-128 Floating Point Converter</h1>
+
+        <div style="margin: auto; width: fit-content;">
+
+            <form id="input_form" style="display: block;">
+
+                <div style="margin: auto; width: fit-content;">
+                    <p>Decimal Representation</p>
+                </div>
+
+                <div style="display: flex;">
+                    <input type="number" id="input_decimal" name="input_decimal" required placeholder="10.0" style="width: 20em;">
+                    <label for="input_exponent" style="padding-left: 0.5em; padding-right: 0.5em;">x 10 ^</label>
+                    <input type="number" id="input_exponent" name="input_exponent" required value="0" placeholder="0" style="width: 2.5em;">
+                </div>
+
+                <div>
+                    <label for="input_rounding">Rounding Method:</label>
+                    <select id="input_rounding" name="input_rounding" required style="width: 20em;">
+                        <option value="truncate">Truncate</option>
+                        <option value="floor">Floor</option>
+                        <option value="ceiling">Ceiling</option>
+                        <option value="nearest_even">Round to Nearest, Ties to Even</option>
+                    </select>
+                </div>
+
+                <div style="margin: auto; width: fit-content;">
+                    <input type="submit" value="Convert">
+                </div>
+
+            </form>
+
+            <form style="display: block; margin-top: 4em;">
+
+                <div style="margin: auto; width: fit-content;">
+                    <p>IEEE-754 Decimal-128 Floating-Point Representation</p>
+                </div>
+
+                <div style="display: flex;">
+                    <label for=""> Binary:</label>
+                    <input type="string" id="output_binary" name="output_binary" disabled style="width: 20em;">
+                </div>
+
+                <div style="display: flex;">
+                    <label for="input_decimal">Hexadecimal:</label>
+                    <input type="string" id="output_hex" name="output_hex" disabled style="width: 15em;">
+                </div>
+
+            </form>
+
+        </div>
+
+        <div style="margin: auto; width: fit-content; padding-top: 10em;">
+            
+            <div style="display: flex;">
+                
+                <img src="family_picture.jpg" alt="CSARCH2 Family <3" height="210">
+            
+                <div style="margin-top: auto; margin-bottom: auto; margin-left: 2em;">
+                    <p>
+                        <b>CSARCH2 Simulation Project</b> </br>
+                        </br>
+                        <b>S13 Group 4:</b> </br>
+                        Argamosa, Daniel </br>
+                        Chan, Dane </br>
+                        Concio, Tean </br>
+                        Sia, Dominic
+                    </p>
+                </div>
+                
+            </div>
+
+        </div>
+
+    </body>
+
+    <script type="text/javascript">
+
+        // On form submit
+        var input_form = document.getElementById("input_form");
+        input_form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Get inputs
+            var input_decimal = document.getElementById("input_decimal").value;
+            var input_exponent = document.getElementById("input_exponent").value;
+            var input_rounding = document.getElementById("input_rounding").value;
+
+            console.log(input_decimal);
+            console.log(input_exponent);
+            console.log(input_rounding);
+
+            // TODO: Convert Logic Here
+
+            // Display outputs
+            var output_binary = document.getElementById("output_binary");
+            var output_hex = document.getElementById("output_hex");
+            output_binary.value = "Your Binary Output";
+            output_hex.value = "Your Hexadecimal Output";
+        });
+
+    </script>
+
+</html>
