@@ -27,7 +27,7 @@ class convert {
         // Get binary representation for integer portion
         let intPart = parseInt(this.inputNum);
         let intBitsTemp = this.convertToBin(countBits, intPart);
-        let intBits = []
+        let intBits = [];
 
         // Get binary representation for fractional portion
         let frcPart = this.inputNum - parseInt(this.inputNum);
@@ -35,7 +35,7 @@ class convert {
         let frcBits = [];
 
         // Flip arrays
-        for (i = 0; i <= frcBitsTemp.length + 1; i++) {
+        for (i = frcBitsTemp.length; i > 0; i--) {
             frcBits.push(frcBitsTemp.pop());
         }
         for (i = 0; i < countBits; i++) {
@@ -53,19 +53,6 @@ class convert {
 
         this.pushToOutput (expBits, frcBits);
         this.printOutput ();
-    }
-
-    // Print
-    printOutput () {
-        let i = 0;
-
-        for (i = 0; i < this.bitSize; i++) {
-            process.stdout.write(this.outputArr[i].toString());
-        }
-        console.log();
-        for (i = 0; i < this.hexSize; i++) {
-            process.stdout.write(this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]));
-        }
     }
 
     // Fill up output array
@@ -91,6 +78,19 @@ class convert {
             else {
                 this.outputArr.push(0);
             }
+        }
+    }
+
+    // Print
+    printOutput () {
+        let i = 0;
+
+        for (i = 0; i < this.bitSize; i++) {
+            process.stdout.write(this.outputArr[i].toString());
+        }
+        console.log();
+        for (i = 0; i < this.hexSize; i++) {
+            process.stdout.write(this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]));
         }
     }
 

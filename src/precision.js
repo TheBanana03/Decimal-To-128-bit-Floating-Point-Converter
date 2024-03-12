@@ -7,7 +7,7 @@ let precision = 1;
 let expBias = 0;
 let expSize = 0;
 
-let inputNum = 69.125
+let inputNum = 236.177013;
 
 let bitSize = precision * 32;
 let hexSize = bitSize / 4;
