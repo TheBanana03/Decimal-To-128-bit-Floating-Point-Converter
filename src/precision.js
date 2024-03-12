@@ -3,7 +3,7 @@ const convert = require('./convert.js');
 // Single Precision: 1
 // Double Precision: 2
 // Quadruple Precision: 4
-let precision = 2;
+let precision = 1;
 let expBias = 0;
 let expSize = 0;
 

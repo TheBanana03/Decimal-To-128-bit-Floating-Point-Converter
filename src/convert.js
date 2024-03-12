@@ -41,6 +41,7 @@ class convert {
         for (i = 0; i < countBits; i++) {
             intBits.push(intBitsTemp.pop());
         }
+
         // Normalize input
         for (i = 0; i < countBits - 1; i++) {
             frcBits.push(intBits.pop());
@@ -50,6 +51,26 @@ class convert {
         // Get binary representation for exponent
         let expBits = this.convertToBin(this.expSize, this.expDegree + this.expBias);
 
+        this.pushToOutput (expBits, frcBits);
+        this.printOutput ();
+    }
+
+    // Print
+    printOutput () {
+        let i = 0;
+
+        for (i = 0; i < this.bitSize; i++) {
+            process.stdout.write(this.outputArr[i].toString());
+        }
+        console.log();
+        for (i = 0; i < this.hexSize; i++) {
+            process.stdout.write(this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]));
+        }
+    }
+
+    // Fill up output array
+    pushToOutput (expArr, mtsArr) {
+        let i = 0;
 
         // Push sign bit
         if (this.inputNum < 0) {
@@ -59,28 +80,17 @@ class convert {
             this.outputArr.push(0);
         }
 
-
         // Push exponent and integer to output
         for (i = 0; i < this.expSize; i++) {
-            this.outputArr.push(expBits.pop());
+            this.outputArr.push(expArr.pop());
         }
         for (i = 0; i < this.bitSize - (this.expSize + 1); i++) {
-            if (frcBits.length > 0) {
-                this.outputArr.push(frcBits.pop());
+            if (mtsArr.length > 0) {
+                this.outputArr.push(mtsArr.pop());
             }
             else {
                 this.outputArr.push(0);
             }
-        }
-
-
-        // Print
-        for (i = 0; i < this.bitSize; i++) {
-            process.stdout.write(this.outputArr[i].toString());
-        }
-        console.log();
-        for (i = 0; i < this.hexSize; i++) {
-            process.stdout.write(this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]));
         }
     }
 
