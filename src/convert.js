@@ -15,6 +15,8 @@ class convert {
         let tempNum = this.inputNum;
         let countBits = 1;
         let i = 0;
+        let lessOne = 0;
+        let temp = 0;
 
         console.log(this.inputNum);
 
@@ -22,6 +24,11 @@ class convert {
         while (Math.abs(tempNum) >= 2) {
             tempNum /= 2;
             countBits++;
+        }
+
+        // Flag if input is less than one
+        if (this.inputNum < 1) {
+            lessOne = 1;
         }
 
         // Get binary representation for integer portion
@@ -41,18 +48,29 @@ class convert {
         for (i = 0; i < countBits; i++) {
             intBits.push(intBitsTemp.pop());
         }
-
+        
         // Normalize input
-        for (i = 0; i < countBits - 1; i++) {
-            frcBits.push(intBits.pop());
-            this.expDegree++;
+        if (lessOne != 1) {
+            for (i = 0; i < countBits - 1; i++) {
+                frcBits.push(intBits.pop());
+                this.expDegree++;
+            }
+        }
+        else {
+            while (lessOne == 1) {
+                temp = frcBits.pop()
+                if (temp == 1) {
+                    lessOne = 0
+                }
+                this.expDegree--;
+            }
         }
 
         // Get binary representation for exponent
         let expBits = this.convertToBin(this.expSize, this.expDegree + this.expBias);
 
         this.pushToOutput (expBits, frcBits);
-        //this.printOutput ();
+        // this.printOutput ();
 
         // Return binary and hex strings
         var binStr = "";
@@ -63,6 +81,8 @@ class convert {
         for (i = 0; i < this.hexSize; i++) {
             hexStr += this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]);
         }
+        console.log(binStr);
+        console.log(hexStr);
         return {binStr, hexStr};
     }
 
@@ -143,5 +163,4 @@ class convert {
     }
 }
 
-// Can't use module for browser
-// module.exports = convert;
+ module.exports = convert;
