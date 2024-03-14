@@ -27,7 +27,7 @@ class convert {
         }
 
         // Flag if input is less than one
-        if (this.inputNum < 1) {
+        if (Math.abs(tempNum) < 1) {
             lessOne = 1;
         }
 
@@ -37,7 +37,7 @@ class convert {
         let intBits = [];
 
         // Get binary representation for fractional portion
-        let frcPart = this.inputNum - parseInt(this.inputNum);
+        let frcPart = Math.abs(this.inputNum) - parseInt((Math.abs(this.inputNum)));
         let frcBitsTemp = this.convertFract(frcPart);
         let frcBits = [];
 
