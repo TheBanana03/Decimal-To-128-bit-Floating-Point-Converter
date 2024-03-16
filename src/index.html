@@ -1,258 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CSARCH2 S13 Group 4 Simulation Project</title>
+<link rel="icon" type="image/x-icon" href="icon.ico">
 
-    <title>CSARCH2 S13 Group 4 Simulation Project</title>
-    <link rel="icon" type="image/x-icon" href="icon.ico">
+<link rel="stylesheet" href="">
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        max-width: 600px;
+        width: 100%;
+        padding: 20px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        background-color: #fff;
+    }
+    .body-block {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 0.75em;
+        margin-bottom: 20px;
+    }
+    form {
+        margin-bottom: 20px;
+    }
+    h2 {
+        margin: 0.25em;
+        margin-bottom: 1em;
+    }
+    .form-line {
+        display: flex;
+        margin-top: 0.5em;
+        align-items: center;
+    }
+    label, input, select, textarea {
+        margin: 0.5em;
+    }
+    .form-line label {
+        white-space: nowrap;
+    }
+    input[type="number"], select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    .form-button-container {
+        margin: auto;
+        width: fit-content;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+    textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: none;
+        font-size: 1.05em;
+    }
+    .download-btn {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .download-btn:hover {
+        background-color: #218838;
+    }
+    .group-members {
+        display: flex;
+        text-align: center;
+    }
+    .group-image {
+        max-width: 50%;
+        height: auto;
+        border-radius: 10%;
+        margin-bottom: 10px;
+    }
+    .group-list {
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 1.5em;
+    }
+</style>
+</head>
 
-    <link rel="stylesheet" href="">
-    <style>
-        /* * {
-            border-color: black;
-            border-width: 3em;
-            border-style: solid;
-        } */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        .body-block {
-            margin: auto; 
-            width: fit-content; 
-            padding: 1em;
-        }
-        form {
-            display: block;
-        }
-        .form-title {
-            margin: auto; 
-            width: fit-content;
-        }
-        .form-line {
-            display: flex; 
-            margin-top: 0.5em;
-            align-items: center;
-        }
-        label, input, select, textarea {
-            margin-left: 0.25em;
-            padding: 0.5em;
-        }
-        .form-button-container {
-            margin: auto; 
-            width: fit-content; 
-            margin-top: 0.5em; 
-        }
-        .group-list {
-            margin-top: auto; 
-            margin-bottom: auto; 
-            margin-left: 1.5em;
-        }
-    </style>
+<body>
+    <div class="container">
+
+        <h1>Decimal-128 Floating Point Converter</h1>
         
-    <body>
 
-        <div class="body-block">
-            <h1>Decimal-128 Floating Point Converter</h1>
-        </div>
+        <!-- Form Input Block -->
+        <form class="body-block" id="input_form">
 
-        <div class="body-block">
+            <h2>Decimal Representation</h2>
 
-            <form id="input_form">
+            <div class="form-line">
+                <input type="number" id="input_decimal" name="input_decimal" step="any" required placeholder="10.0">
+                <label for="input_exponent">x 10 ^</label>
+                <input type="number" id="input_exponent" name="input_exponent" required value="0" placeholder="0" style="width: 5em;">
+            </div>
 
-                <div class="form-title">
-                    <p>Decimal Representation</p>
-                </div>
-
-                <div class="form-line">
-                    <input type="number" id="input_decimal" name="input_decimal" step="any" required placeholder="10.0" style="width: 25em;">
-                    <label for="input_exponent">x 10 ^</label>
-                    <input type="number" id="input_exponent" name="input_exponent" required value="0" placeholder="0" style="width: 2.5em;">
-                </div>
-
-                <div class="form-line">
-                    <label for="input_rounding">Rounding Method:</label>
-                    <select id="input_rounding" name="input_rounding" required style="width: 20em;">
-                        <option value="truncate">Truncate</option>
-                        <option value="floor">Floor</option>
-                        <option value="ceiling">Ceiling</option>
-                        <option value="nearest_even">Round to Nearest, Ties to Even</option>
-                    </select>
-                </div>
-
-                <div class="form-line">
-                    <label for="input_precision">Precision:</label>
-                    <select id="input_precision" name="input_precision" required value="double_double" style="width: 15em;">
-                        <option value="single">Single (32-bit)</option>
-                        <option value="double">Double (64-bit)</option>
-                        <option value="double_double" selected>Double Double (128-bit)</option>
-                    </select>
-                </div>
-
-                <div class="form-button-container">
-                    <input type="submit" value="Convert">
-                </div>
-
-            </form>
-
-            <form style="margin-top: 4em;">
-
-                <div class="form-title">
-                    <p>IEEE-754 Decimal-128 Floating-Point Representation</p>
-                </div>
-
-                <div class="form-line">
-                    <label for="output_binary">Binary:</label>
-                    <textarea id="output_binary" name="output_binary" disabled rows="4" cols="30"></textarea>
-                </div>
-
-                <div class="form-line">
-                    <label for="input_decimal">Hexadecimal:</label>
-                    <textarea id="output_hex" name="output_hex" disabled rows="1" cols="30"></textarea>
-                </div>
-
-                <div class="form-button-container">
-                    <input type="button" id="download_txt" value="Download As Text">
-                </div>
-
-            </form>
-
-        </div>
-
-        <div class="body-block" style="display:flex; margin-top: 10em;">
+            <div class="form-line">
+                <label for="input_rounding">Rounding Method:</label>
+                <select id="input_rounding" name="input_rounding" required>
+                    <option value="truncate">Truncate</option>
+                    <option value="floor">Floor</option>
+                    <option value="ceiling">Ceiling</option>
+                    <option value="nearest_even">Round to Nearest, Ties to Even</option>
+                </select>
+            </div>
             
-            <img src="family_picture.jpg" alt="CSARCH2 Family <3" height="210">
+            <div class="form-line">
+                <label for="input_precision">Precision:</label>
+                <select id="input_precision" name="input_precision" required value="double_double">
+                    <option value="single">Single (32-bit)</option>
+                    <option value="double">Double (64-bit)</option>
+                    <option value="double_double" selected>Double Double (128-bit)</option>
+                </select>
+            </div>
+
+            <div class="form-button-container">
+                <button type="submit">Submit</button>
+            </div>
+            
+        </form>
         
-            <div class="group-list">
-                <p>
-                    <b>CSARCH2 Simulation Project</b> </br>
-                    </br>
-                    <b>S13 Group 4:</b> </br>
-                    Argamosa, Daniel </br>
-                    Chan, Dane </br>
-                    Concio, Tean </br>
-                    Sia, Dominic
-                </p>
+
+        <!-- Output Block -->
+        <div class="body-block">
+
+            <h2>IEEE-754 Decimal-128 Floating-Point Representation</h2>
+
+            <div class="form-line">
+                <label for="output_binary">Binary:</label>
+                <textarea id="output_binary" name="output_binary" rows="3" readonly>Binary Conversion</textarea>
+            </div>
+
+            <div class="form-line">
+                <label for="input_decimal">Hexadecimal:</label>
+                <textarea id="output_hex" name="output_hex" rows="1" readonly>Hexadecimal Conversion</textarea>
+            </div>
+
+            <div class="form-button-container">
+                <button class="download-btn" id="download_txt">Download as Text</button>
             </div>
 
         </div>
+        
 
-    </body>
+        <!-- Group Members Block -->
+        <div class="body-block group-members">
+            <img src="family_picture.jpg" class="group-image" alt="CSARCH2 Family <3">
+            <div class="group-list">
+                <p>
+                    <b>CSARCH2 Simulation Project</b> <br>
+                    <br>
+                    <b>S13 Group 4:</b> <br>
+                    Argamosa, Daniel <br>
+                    Chan, Dane <br>
+                    Concio, Tean <br>
+                    Sia, Dominic
+                </p>
+            </div>
+        </div>
 
-    <script src="convert.js"></script>
-    <script type="text/JavaScript">
+    </div>
+</body>
 
-        // Get all elements
-        var input_decimal_element = document.getElementById("input_decimal");
-        var input_exponent_element = document.getElementById("input_exponent");
-        var input_rounding_element = document.getElementById("input_rounding");
-        var input_precision_element = document.getElementById("input_precision");
+<script src="convert.js"></script>
+<script type="text/JavaScript">
 
-        var output_binary_element = document.getElementById("output_binary");
-        var output_hex_element = document.getElementById("output_hex");
+    // Get all elements
+    var input_decimal_element = document.getElementById("input_decimal");
+    var input_exponent_element = document.getElementById("input_exponent");
+    var input_rounding_element = document.getElementById("input_rounding");
+    var input_precision_element = document.getElementById("input_precision");
 
-
-        // Declare all element values
-        var input_decimal = input_decimal_element.value;
-        var input_exponent = input_exponent_element.value;
-        var input_rounding = input_rounding_element.value;
-        var input_precision = input_precision_element.value;
-
-        var output_binary = output_binary_element.value;
-        var output_hex = output_hex_element.value;
-
-
-        // On form submit
-        var input_form = document.getElementById("input_form");
-        input_form.addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            // Get inputs
-            input_decimal = input_decimal_element.value;
-            input_exponent = input_exponent_element.value;
-            input_rounding = input_rounding_element.value;
-            input_precision = input_precision_element.value;
-
-            console.log(input_decimal);
-            console.log(input_exponent);
-            console.log(input_rounding);
-
-            // TODO: Convert Logic Here
-            var IEEE754 = new convert(input_decimal, 128, 32, 16383, 15);
-            if (IEEE754) {
-                let output = IEEE754.process();
-                output_binary = output.binStr;
-                output_hex = output.hexStr;
-            } else {
-                console.log("Conversion failed.");
-            }
-
-            console.log(output_binary);
-            console.log(output_hex);
-
-            // Display outputs
-            output_binary_element.value = output_binary;
-            output_hex_element.value = output_hex;
-        });
+    var output_binary_element = document.getElementById("output_binary");
+    var output_hex_element = document.getElementById("output_hex");
 
 
-        // Download as Text
-        var download_txt = document.getElementById("download_txt");
-        download_txt.addEventListener("click", function () {
-            event.preventDefault();
+    // Declare all element values
+    var input_decimal = input_decimal_element.value;
+    var input_exponent = input_exponent_element.value;
+    var input_rounding = input_rounding_element.value;
+    var input_precision = input_precision_element.value;
 
-            // Correct Enum Values
-            if (input_rounding === "truncate") {
-                input_rounding = "Truncate";
-            } else if (input_rounding === "floor") {
-                input_rounding = "Floor";
-            } else if (input_rounding === "ceiling") {
-                input_rounding = "Ceiling";
-            } else if (input_rounding === "nearest_even") {
-                input_rounding = "Round to Nearest, Ties to Even";
-            }
-            if (input_precision === "single") {
-                input_precision = "Single (32-bit)";
-            } else if (input_precision === "double") {
-                input_precision = "Double (64-bit)";
-            } else if (input_precision === "double_double") {
-                input_precision = "Double Double (128-bit)";
-            }
-            
-            // Declare filename and text
-            var filename = "IEEE-754_Decimal-128_Floating-Point_Representation.txt";
-            var text = "";
-            text += `Decimal: ${input_decimal} x 10 ^ ${input_exponent}\n`;
-            text += `Rounding Method: ${input_rounding}\n`;
-            text += `Precision: ${input_precision}\n`;
-            text += `\n`;
-            text += `Binary: ${output_binary}\n`;
-            text += `Hexadecimal: ${output_hex}`;
+    var output_binary = output_binary_element.value;
+    var output_hex = output_hex_element.value;
 
-            // Download Logic
-            // Create download link element
-            let downloadLink = document.createElement("a");
-            // File name
-            downloadLink.download = filename;
-            // Create a link to the file
-            downloadLink.href = window.URL.createObjectURL(
-                new Blob([text], { type: "text;charset=utf-8;" })
-            );
-            // Hide download link
-            downloadLink.style.display = "none";
-            // Add the link to DOM
-            document.body.appendChild(downloadLink);
 
-            // Click download link
-            downloadLink.click();
+    // On form submit
+    var input_form = document.getElementById("input_form");
+    input_form.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-            // Delete the link from DOM
-            document.body.removeChild(downloadLink);
-        });
+        // Get inputs
+        input_decimal = input_decimal_element.value;
+        input_exponent = input_exponent_element.value;
+        input_rounding = input_rounding_element.value;
+        input_precision = input_precision_element.value;
 
-    </script>
+        console.log(input_decimal);
+        console.log(input_exponent);
+        console.log(input_rounding);
+
+        // TODO: Convert Logic Here
+        var IEEE754 = new convert(input_decimal, 128, 32, 16383, 15);
+        if (IEEE754) {
+            let output = IEEE754.process();
+            output_binary = output.binStr;
+            output_hex = output.hexStr;
+        } else {
+            console.log("Conversion failed.");
+        }
+
+        console.log(output_binary);
+        console.log(output_hex);
+
+        // Display outputs
+        output_binary_element.value = output_binary;
+        output_hex_element.value = output_hex;
+    });
+
+
+    // Download as Text
+    var download_txt = document.getElementById("download_txt");
+    download_txt.addEventListener("click", function () {
+        event.preventDefault();
+
+        // Correct Enum Values
+        if (input_rounding === "truncate") {
+            input_rounding = "Truncate";
+        } else if (input_rounding === "floor") {
+            input_rounding = "Floor";
+        } else if (input_rounding === "ceiling") {
+            input_rounding = "Ceiling";
+        } else if (input_rounding === "nearest_even") {
+            input_rounding = "Round to Nearest, Ties to Even";
+        }
+        if (input_precision === "single") {
+            input_precision = "Single (32-bit)";
+        } else if (input_precision === "double") {
+            input_precision = "Double (64-bit)";
+        } else if (input_precision === "double_double") {
+            input_precision = "Double Double (128-bit)";
+        }
+        
+        // Declare filename and text
+        var filename = "IEEE-754_Decimal-128_Floating-Point_Representation.txt";
+        var text = "";
+        text += `Decimal: ${input_decimal} x 10 ^ ${input_exponent}\n`;
+        text += `Rounding Method: ${input_rounding}\n`;
+        text += `Precision: ${input_precision}\n`;
+        text += `\n`;
+        text += `Binary: ${output_binary}\n`;
+        text += `Hexadecimal: ${output_hex}`;
+
+        // Download Logic
+        // Create download link element
+        let downloadLink = document.createElement("a");
+        // File name
+        downloadLink.download = filename;
+        // Create a link to the file
+        downloadLink.href = window.URL.createObjectURL(
+            new Blob([text], { type: "text;charset=utf-8;" })
+        );
+        // Hide download link
+        downloadLink.style.display = "none";
+        // Add the link to DOM
+        document.body.appendChild(downloadLink);
+
+        // Click download link
+        downloadLink.click();
+
+        // Delete the link from DOM
+        document.body.removeChild(downloadLink);
+    });
+
+</script>
 
 </html>
