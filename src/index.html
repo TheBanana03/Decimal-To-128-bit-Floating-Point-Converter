@@ -28,15 +28,15 @@
                     <p>Decimal Representation</p>
                 </div>
 
-                <div style="display: flex;">
-                    <input type="number" id="input_decimal" name="input_decimal" required placeholder="10.0" style="width: 20em;">
+                <div style="display: flex; margin-top: 0.5em; align-items: center;">
+                    <input type="number" id="input_decimal" name="input_decimal" step="any" required placeholder="10.0" style="width: 25em; padding: 0.5em">
                     <label for="input_exponent" style="padding-left: 0.5em; padding-right: 0.5em;">x 10 ^</label>
-                    <input type="number" id="input_exponent" name="input_exponent" required value="0" placeholder="0" style="width: 2.5em;">
+                    <input type="number" id="input_exponent" name="input_exponent" required value="0" placeholder="0" style="width: 2.5em; padding: 0.5em">
                 </div>
 
-                <div>
+                <div style=" margin-top: 0.5em;">
                     <label for="input_rounding">Rounding Method:</label>
-                    <select id="input_rounding" name="input_rounding" required style="width: 20em;">
+                    <select id="input_rounding" name="input_rounding" required style="width: 20em; padding: 0.5em">
                         <option value="truncate">Truncate</option>
                         <option value="floor">Floor</option>
                         <option value="ceiling">Ceiling</option>
@@ -44,7 +44,16 @@
                     </select>
                 </div>
 
-                <div style="margin: auto; width: fit-content;">
+                <div style=" margin-top: 0.5em;">
+                    <label for="input_precision">Precision:</label>
+                    <select id="input_precision" name="input_precision" required value="double_double" style="width: 15em; padding: 0.5em">
+                        <option value="single">Single (32-bit)</option>
+                        <option value="double">Double (64-bit)</option>
+                        <option value="double_double" selected>Double Double (128-bit)</option>
+                    </select>
+                </div>
+
+                <div style="margin: auto; width: fit-content; margin-top: 0.5em; padding: 0.5em">
                     <input type="submit" value="Convert">
                 </div>
 
@@ -56,14 +65,18 @@
                     <p>IEEE-754 Decimal-128 Floating-Point Representation</p>
                 </div>
 
-                <div style="display: flex;">
+                <div style="display: flex; margin-top: 0.5em;">
                     <label for="output_binary">Binary:</label>
-                    <textarea id="output_binary" name="output_binary" disabled rows="4" cols="30"></textarea>
+                    <textarea id="output_binary" name="output_binary" disabled rows="4" cols="30" style="padding: 0.5em"></textarea>
                 </div>
 
-                <div style="display: flex;">
+                <div style="display: flex; margin-top: 0.5em;">
                     <label for="input_decimal">Hexadecimal:</label>
-                    <textarea id="output_hex" name="output_hex" disabled rows="1" cols="30"></textarea>
+                    <textarea id="output_hex" name="output_hex" disabled rows="1" cols="30" style="padding: 0.5em"></textarea>
+                </div>
+
+                <div style="margin: auto; width: fit-content; margin-top: 0.5em; padding: 0.5em">
+                    <input type="button" id="download_txt" value="Download As Text">
                 </div>
 
             </form>
@@ -97,42 +110,112 @@
     <script src="convert.js"></script>
     <script type="text/JavaScript">
 
+        // Get all elements
+        var input_decimal_element = document.getElementById("input_decimal");
+        var input_exponent_element = document.getElementById("input_exponent");
+        var input_rounding_element = document.getElementById("input_rounding");
+        var input_precision_element = document.getElementById("input_precision");
+
+        var output_binary_element = document.getElementById("output_binary");
+        var output_hex_element = document.getElementById("output_hex");
+
+
+        // Declare all element values
+        var input_decimal = input_decimal_element.value;
+        var input_exponent = input_exponent_element.value;
+        var input_rounding = input_rounding_element.value;
+        var input_precision = input_precision_element.value;
+
+        var output_binary = output_binary_element.value;
+        var output_hex = output_hex_element.value;
+
+
         // On form submit
         var input_form = document.getElementById("input_form");
         input_form.addEventListener("submit", function (event) {
             event.preventDefault();
 
             // Get inputs
-            var input_decimal = document.getElementById("input_decimal").value;
-            var input_exponent = document.getElementById("input_exponent").value;
-            var input_rounding = document.getElementById("input_rounding").value;
+            input_decimal = input_decimal_element.value;
+            input_exponent = input_exponent_element.value;
+            input_rounding = input_rounding_element.value;
+            input_precision = input_precision_element.value;
 
             console.log(input_decimal);
             console.log(input_exponent);
             console.log(input_rounding);
 
-            // Declare outputs
-            var binary_output;
-            var hex_output;
-
             // TODO: Convert Logic Here
             var IEEE754 = new convert(input_decimal, 128, 32, 16383, 15);
             if (IEEE754) {
                 let output = IEEE754.process();
-                binary_output = output.binStr;
-                hex_output = output.hexStr;
+                output_binary = output.binStr;
+                output_hex = output.hexStr;
             } else {
                 console.log("Conversion failed.");
             }
 
-            console.log(binary_output);
-            console.log(hex_output);
+            console.log(output_binary);
+            console.log(output_hex);
 
             // Display outputs
-            var output_binary_element = document.getElementById("output_binary");
-            var output_hex_element = document.getElementById("output_hex");
-            output_binary.value = binary_output;
-            output_hex.value = hex_output;
+            output_binary_element.value = output_binary;
+            output_hex_element.value = output_hex;
+        });
+
+
+        // Download as Text
+        var download_txt = document.getElementById("download_txt");
+        download_txt.addEventListener("click", function () {
+            event.preventDefault();
+
+            // Correct Enum Values
+            if (input_rounding === "truncate") {
+                input_rounding = "Truncate";
+            } else if (input_rounding === "floor") {
+                input_rounding = "Floor";
+            } else if (input_rounding === "ceiling") {
+                input_rounding = "Ceiling";
+            } else if (input_rounding === "nearest_even") {
+                input_rounding = "Round to Nearest, Ties to Even";
+            }
+            if (input_precision === "single") {
+                input_precision = "Single (32-bit)";
+            } else if (input_precision === "double") {
+                input_precision = "Double (64-bit)";
+            } else if (input_precision === "double_double") {
+                input_precision = "Double Double (128-bit)";
+            }
+            
+            // Declare filename and text
+            var filename = "IEEE-754_Decimal-128_Floating-Point_Representation.txt";
+            var text = "";
+            text += `Decimal: ${input_decimal} x 10 ^ ${input_exponent}\n`;
+            text += `Rounding Method: ${input_rounding}\n`;
+            text += `Precision: ${input_precision}\n`;
+            text += `\n`;
+            text += `Binary: ${output_binary}\n`;
+            text += `Hexadecimal: ${output_hex}`;
+
+            // Download Logic
+            // Create download link element
+            let downloadLink = document.createElement("a");
+            // File name
+            downloadLink.download = filename;
+            // Create a link to the file
+            downloadLink.href = window.URL.createObjectURL(
+                new Blob([text], { type: "text;charset=utf-8;" })
+            );
+            // Hide download link
+            downloadLink.style.display = "none";
+            // Add the link to DOM
+            document.body.appendChild(downloadLink);
+
+            // Click download link
+            downloadLink.click();
+
+            // Delete the link from DOM
+            document.body.removeChild(downloadLink);
         });
 
     </script>
