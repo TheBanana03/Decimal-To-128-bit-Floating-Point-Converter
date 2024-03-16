@@ -9,11 +9,6 @@
 
     <link rel="stylesheet" href="">
     <style>
-        /* * {
-            border-color: black;
-            border-width: 3em;
-            border-style: solid;
-        } */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -21,19 +16,19 @@
             padding: 0;
         }
         .body-block {
-            margin: auto; 
-            width: fit-content; 
+            margin: auto;
+            width: fit-content;
             padding: 1em;
         }
         form {
             display: block;
         }
         .form-title {
-            margin: auto; 
+            margin: auto;
             width: fit-content;
         }
         .form-line {
-            display: flex; 
+            display: flex;
             margin-top: 0.5em;
             align-items: center;
         }
@@ -42,17 +37,17 @@
             padding: 0.5em;
         }
         .form-button-container {
-            margin: auto; 
-            width: fit-content; 
-            margin-top: 0.5em; 
+            margin: auto;
+            width: fit-content;
+            margin-top: 0.5em;
         }
         .group-list {
-            margin-top: auto; 
-            margin-bottom: auto; 
+            margin-top: auto;
+            margin-bottom: auto;
             margin-left: 1.5em;
         }
     </style>
-        
+
     <body>
 
         <div class="body-block">
@@ -60,19 +55,15 @@
         </div>
 
         <div class="body-block">
-
             <form id="input_form">
-
                 <div class="form-title">
                     <p>Decimal Representation</p>
                 </div>
-
                 <div class="form-line">
                     <input type="number" id="input_decimal" name="input_decimal" step="any" required placeholder="10.0" style="width: 25em;">
                     <label for="input_exponent">x 10 ^</label>
                     <input type="number" id="input_exponent" name="input_exponent" required value="0" placeholder="0" style="width: 2.5em;">
                 </div>
-
                 <div class="form-line">
                     <label for="input_rounding">Rounding Method:</label>
                     <select id="input_rounding" name="input_rounding" required style="width: 20em;">
@@ -82,7 +73,6 @@
                         <option value="nearest_even">Round to Nearest, Ties to Even</option>
                     </select>
                 </div>
-
                 <div class="form-line">
                     <label for="input_precision">Precision:</label>
                     <select id="input_precision" name="input_precision" required value="double_double" style="width: 15em;">
@@ -91,53 +81,42 @@
                         <option value="double_double" selected>Double Double (128-bit)</option>
                     </select>
                 </div>
-
                 <div class="form-button-container">
                     <input type="submit" value="Convert">
                 </div>
-
             </form>
 
             <form style="margin-top: 4em;">
-
                 <div class="form-title">
                     <p>IEEE-754 Decimal-128 Floating-Point Representation</p>
                 </div>
-
                 <div class="form-line">
                     <label for="output_binary">Binary:</label>
                     <textarea id="output_binary" name="output_binary" disabled rows="4" cols="30"></textarea>
                 </div>
-
                 <div class="form-line">
                     <label for="input_decimal">Hexadecimal:</label>
                     <textarea id="output_hex" name="output_hex" disabled rows="1" cols="30"></textarea>
                 </div>
-
                 <div class="form-button-container">
                     <input type="button" id="download_txt" value="Download As Text">
                 </div>
-
             </form>
-
         </div>
 
         <div class="body-block" style="display:flex; margin-top: 10em;">
-            
             <img src="family_picture.jpg" alt="CSARCH2 Family <3" height="210">
-        
             <div class="group-list">
                 <p>
-                    <b>CSARCH2 Simulation Project</b> </br>
-                    </br>
-                    <b>S13 Group 4:</b> </br>
-                    Argamosa, Daniel </br>
-                    Chan, Dane </br>
-                    Concio, Tean </br>
+                    <b>CSARCH2 Simulation Project</b> <br>
+                    <br>
+                    <b>S13 Group 4:</b> <br>
+                    Argamosa, Daniel <br>
+                    Chan, Dane <br>
+                    Concio, Tean <br>
                     Sia, Dominic
                 </p>
             </div>
-
         </div>
 
     </body>
