@@ -73,16 +73,22 @@ class convert {
         // this.printOutput ();
 
         // Return binary and hex strings
-        var binStr = "";
-        var hexStr = "";
-        for (i = 0; i < this.bitSize; i++) {
-            binStr += this.outputArr[i].toString();
-        }
-        for (i = 0; i < this.hexSize; i++) {
-            hexStr += this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]);
-        }
+        var {binStr, hexStr} = this.getOutputStr();
+
         console.log(binStr);
         console.log(hexStr);
+        return {binStr, hexStr};
+    }
+
+    getOutputStr () {
+        var binStr = "";
+        var hexStr = "";
+        for (var i = 0; i < this.bitSize; i++) {
+            binStr += this.outputArr[i].toString();
+        }
+        for (var i = 0; i < this.hexSize; i++) {
+            hexStr += this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]);
+        }
         return {binStr, hexStr};
     }
 
@@ -163,4 +169,4 @@ class convert {
     }
 }
 
- module.exports = convert;
+//module.exports = convert;
