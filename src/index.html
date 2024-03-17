@@ -38,10 +38,18 @@
         margin: 0.25em;
         margin-bottom: 1em;
     }
-    .form-line {
+    .form-line, .error-line {
         display: flex;
         margin-top: 0.5em;
         align-items: center;
+    }
+    .error-line {
+        color: #ff0000;
+        font-size: 0.9em;
+        margin: 0em;
+        margin-left: 0.5em;
+        margin-top: -1.5em;
+        display: none;
     }
     label, input, select, textarea {
         margin: 0.5em;
@@ -49,7 +57,7 @@
     .form-line label {
         white-space: nowrap;
     }
-    input[type="number"], select {
+    input, select {
         width: 100%;
         padding: 10px;
         margin-bottom: 10px;
@@ -124,9 +132,13 @@
             <h2>Decimal Representation</h2>
 
             <div class="form-line">
-                <input type="number" id="input_decimal" name="input_decimal" step="any" required placeholder="10.0">
+                <input type="text" id="input_decimal" name="input_decimal" required placeholder="10.0">
                 <label for="input_exponent">x 10 ^</label>
                 <input type="number" id="input_exponent" name="input_exponent" required value="0" placeholder="0" style="width: 5em;">
+            </div>
+
+            <div class="error-line" id="input_error">
+                <p>Input must only contain valid numerical characters</p>
             </div>
 
             <div class="form-line">
@@ -197,7 +209,10 @@
 </body>
 
 <script src="convert.js"></script>
+<script src="dom_rounding.js"></script>
 <script type="text/JavaScript">
+
+    // Main HTML
 
     // Get all elements
     var input_decimal_element = document.getElementById("input_decimal");
@@ -214,6 +229,8 @@
     var input_exponent = input_exponent_element.value;
     var input_rounding = input_rounding_element.value;
     var input_precision = input_precision_element.value;
+
+    var input_error = document.getElementById("input_error");
 
     var output_binary = output_binary_element.value;
     var output_hex = output_hex_element.value;
@@ -233,6 +250,14 @@
         console.log(input_decimal);
         console.log(input_exponent);
         console.log(input_rounding);
+
+        if (!validateInput(input_decimal)) {
+            input_error.style.display = "block";
+            return;
+        }
+        else {
+            input_error.style.display = "none";
+        }
 
         // TODO: Convert Logic Here
         var IEEE754 = new convert(input_decimal, 128, 32, 16383, 15);
