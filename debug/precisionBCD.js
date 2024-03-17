@@ -1,4 +1,4 @@
-const convert = require('./convertBCD.js');
+const convert = require('../js/convertBCD.js');
 
 // Single Precision: 1
 // Double Precision: 2

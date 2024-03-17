@@ -1,5 +1,5 @@
 const BigNumber = require('bignumber.js');
-const convert = require('./convert.js');
+const convert = require('../js/convert.js');
 
 // Single Precision: 1
 // Double Precision: 2
