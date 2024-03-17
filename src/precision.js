@@ -1,3 +1,4 @@
+const BigNumber = require('bignumber.js');
 const convert = require('./convert.js');
 
 // Single Precision: 1
@@ -6,7 +7,7 @@ const convert = require('./convert.js');
 let precision = 1;
 let expSize = 0;
 
-let inputNum = -123;
+let inputNum = "-435340.549387389473748738473843344345345345345345";
 
 let bitSize = precision * 32;
 let hexSize = bitSize / 4;

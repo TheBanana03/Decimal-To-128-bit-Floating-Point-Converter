@@ -1,6 +1,8 @@
+const BigNumber = require('bignumber.js');
+
 class convert {
     constructor(inputNum, bitSize, hexSize, expBias, expSize) {
-        this.inputNum = inputNum;
+        this.inputNum = new BigNumber(inputNum);
         this.expDegree = 0;
         this.outputArr = [];
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
@@ -13,36 +15,38 @@ class convert {
     }
     
     process () {
-        let tempNum = this.inputNum;
+        // If negative
+        if (this.inputNum < 0) {
+            this.negNum = 1;
+            this.inputNum = this.inputNum.abs();
+        }
+
+        let tempNum = new BigNumber(this.inputNum.toString());
         let countBits = 1;
         let i = 0;
         let lessOne = 0;
         let temp = 0;
 
-        console.log(this.inputNum);
+        console.log(this.inputNum.toString());
 
         // Count the number of bits used for the integer
-        while (Math.abs(tempNum) >= 2) {
-            tempNum /= 2;
+        while (tempNum >= 2) {
+            tempNum = tempNum.dividedBy(2);
             countBits++;
         }
 
         // Flag if input is less than one
-        if (Math.abs(tempNum) < 1) {
+        if (tempNum < 1) {
             lessOne = 1;
-        }
-        if (this.inputNum) {
-            this.negNum = 1;
-            this.inputNum = Math.abs(this.inputNum);
         }
 
         // Get binary representation for integer portion
-        let intPart = parseInt(this.inputNum);
+        let intPart = this.inputNum.integerValue(BigNumber.ROUND_FLOOR);
         let intBitsTemp = this.convertToBin(countBits, intPart);
         let intBits = [];
 
         // Get binary representation for fractional portion
-        let frcPart = Math.abs(this.inputNum) - parseInt((Math.abs(this.inputNum)));
+        let frcPart = this.inputNum.abs() - this.inputNum.abs().integerValue(BigNumber.ROUND_FLOOR);
         let frcBitsTemp = this.convertFract(frcPart);
         let frcBits = [];
 
@@ -132,12 +136,14 @@ class convert {
     }
 
     // Convert integer to binary
-    convertToBin (bitSize, srcNum) {
+    convertToBin (bitSize, tempNum) {
         let i = 0;
         let dstArr = [];
+        let srcNum = new BigNumber(tempNum.toString());
+        
         for (i = 0; i < bitSize; i++) {
             dstArr.push(srcNum % 2);
-            srcNum = parseInt(srcNum / 2);
+            srcNum = srcNum.dividedBy(2).integerValue(BigNumber.ROUND_FLOOR);
         }
 
         return dstArr

@@ -3,7 +3,7 @@ const convert = require('./convertBCD.js');
 // Single Precision: 1
 // Double Precision: 2
 // Quadruple Precision: 4
-let precision = 2;
+let precision = 1;
 
 let inputNum = "512";
 let expDegree = 0;
