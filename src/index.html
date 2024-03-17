@@ -300,8 +300,8 @@
         var IEEE754_Converter = new convert(input_decimal, 128, 32, 16383, 15);
         if (IEEE754_Converter) {
             let output = IEEE754_Converter.process();
-            output_binary = output.binStr;
-            output_hex = output.hexStr;
+            output_binary = output.binStr;      // Put the output binary string into the output_binary variable
+            output_hex = output.hexStr;         // Put the output hex string into the output_hex variable
         } else {
             console.log("Conversion failed.");
         }
