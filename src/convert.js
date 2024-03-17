@@ -4,6 +4,7 @@ class convert {
         this.expDegree = 0;
         this.outputArr = [];
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+        this.negNum = 0;
 
         this.bitSize = bitSize;
         this.hexSize = hexSize;
@@ -29,6 +30,10 @@ class convert {
         // Flag if input is less than one
         if (Math.abs(tempNum) < 1) {
             lessOne = 1;
+        }
+        if (this.inputNum) {
+            this.negNum = 1;
+            this.inputNum = Math.abs(this.inputNum);
         }
 
         // Get binary representation for integer portion
@@ -97,12 +102,7 @@ class convert {
         let i = 0;
 
         // Push sign bit
-        if (this.inputNum < 0) {
-            this.outputArr.push(1);
-        }
-        else if (this.inputNum > 0) {
-            this.outputArr.push(0);
-        }
+        this.outputArr.push(this.negNum);
 
         // Push exponent and integer to output
         for (i = 0; i < this.expSize; i++) {
@@ -169,4 +169,4 @@ class convert {
     }
 }
 
-//module.exports = convert;
+module.exports = convert;

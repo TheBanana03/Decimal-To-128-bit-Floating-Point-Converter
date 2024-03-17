@@ -4,10 +4,9 @@ const convert = require('./convert.js');
 // Double Precision: 2
 // Quadruple Precision: 4
 let precision = 1;
-let expBias = 0;
 let expSize = 0;
 
-let inputNum = -0.0012961654;
+let inputNum = -123;
 
 let bitSize = precision * 32;
 let hexSize = bitSize / 4;
@@ -22,7 +21,7 @@ else if (precision == 2) {
 }
 else if (precision == 4) {
     expBias = 16383;
-    expSize = 15
+    expSize = 15;
 }
 
 let IEEE754 = new convert(inputNum, bitSize, hexSize, expBias, expSize);
