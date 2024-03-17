@@ -2,9 +2,18 @@ class convertBCD {
     constructor(inputNum, expDegree, isNegative, precision) {
         this.inputNum = inputNum;
         this.expDegree = expDegree;
-        this.isNegative = isNegative;
         this.outputStr = "";
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+
+        switch (isNegative) {
+            case true:
+                this.isNegative = 1;
+                break;
+
+            case false:
+                this.isNegative = 0;
+                break;
+        }
 
         switch (precision) {
 
@@ -231,4 +240,5 @@ class convertBCD {
     }
 }
 
-module.exports = convertBCD;
+// Export
+window.convertBCD = convertBCD;

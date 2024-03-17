@@ -1,4 +1,4 @@
-const BigNumber = require('bignumber.js');
+const BigNumber = window.BigNumber;
 
 class convert {
     constructor(inputNum, expDegree, precision) {
@@ -194,4 +194,5 @@ class convert {
     }
 }
 
-module.exports = convert;
+// Export
+window.convert = convert;

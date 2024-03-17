@@ -135,3 +135,8 @@ function addCarry(integer) {
     }
     return integer
 }
+
+// Export
+window.validateInput = validateInput;
+
+console.log("hello world!")
