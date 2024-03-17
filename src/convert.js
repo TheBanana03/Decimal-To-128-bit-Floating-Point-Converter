@@ -1,17 +1,36 @@
 const BigNumber = require('bignumber.js');
 
 class convert {
-    constructor(inputNum, bitSize, hexSize, expBias, expSize) {
+    constructor(inputNum, expDegree, precision) {
         this.inputNum = new BigNumber(inputNum);
-        this.expDegree = 0;
+        this.expDegree = expDegree;
         this.outputArr = [];
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
         this.negNum = 0;
 
-        this.bitSize = bitSize;
-        this.hexSize = hexSize;
-        this.expBias = expBias;
-        this.expSize = expSize;
+        switch (precision) {
+
+            case "single":
+                precision = 1;
+                this.expBias = 127;
+                this.expSize = 8;
+                break;
+
+            case "double":
+                precision = 2;
+                this.expBias = 1023;
+                this.expSize = 11;
+                break;
+
+            case "quadruple":
+                precision = 4;
+                this.expBias = 16383;
+                this.expSize = 15;
+                break;
+        }
+
+        this.bitSize = precision * 32;
+        this.hexSize = this.bitSize / 4;
     }
     
     process () {

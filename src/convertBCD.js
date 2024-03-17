@@ -1,18 +1,36 @@
 class convertBCD {
-    constructor(inputNum, bitSize, hexSize, expBias, expSize, coefBit, combiBit, strLen, expDegree, isNegative) {
+    constructor(inputNum, expDegree, isNegative, precision) {
         this.inputNum = inputNum;
         this.expDegree = expDegree;
         this.isNegative = isNegative;
         this.outputStr = "";
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
 
-        this.bitSize = bitSize;
-        this.hexSize = hexSize;
-        this.expBias = expBias;
-        this.expSize = expSize;
-        this.coefBit = coefBit;
-        this.combiBit = combiBit;
-        this.strLen = strLen;
+        switch (precision) {
+
+            case "single":
+                precision = 1;
+                break;
+
+            case "double":
+                precision = 2;
+                break;
+
+            case "quadruple":
+                precision = 4;
+                break;
+        }
+
+        this.bitSize = precision * 32;
+        this.hexSize = this.bitSize / 4;
+        this.combiBit = 5;
+        this.coefBit = this.bitSize - (this.bitSize % 10) - 10;
+        this.strLen = ((this.coefBit / 10) * 3) + 1;
+        this.expSize = this.bitSize - this.coefBit - this.combiBit - 1;
+        
+        let expLim = ((Math.pow(2, this.expSize + 2) - Math.pow(2, this.expSize))) - 1;
+        let expOffset = Math.pow(2, precision + (precision % 3) + (precision % 2)) - (4 - precision);
+        this.expBias = expLim - parseInt(expLim / 2) + expOffset;
     }
     
     process () {
