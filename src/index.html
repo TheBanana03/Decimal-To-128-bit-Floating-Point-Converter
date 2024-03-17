@@ -18,7 +18,7 @@
         font-family: Arial, sans-serif;
     }
     .container {
-        max-width: 600px;
+        max-width: 720px;
         width: 100%;
         padding: 20px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -38,10 +38,13 @@
         margin: 0.25em;
         margin-bottom: 1em;
     }
-    .form-line, .error-line {
+    .form-line, .form-line-line, .line-part, .error-line {
         display: flex;
-        margin-top: 0.5em;
         align-items: center;
+    }
+    .form-line-line {
+        margin-top: 0em;
+        margin-bottom: 0em;
     }
     .error-line {
         color: #ff0000;
@@ -132,9 +135,9 @@
             <h2>Decimal Representation</h2>
 
             <div class="form-line">
-                <input type="text" id="input_decimal" name="input_decimal" required placeholder="10.0">
+                <input type="text" id="input_decimal" name="input_decimal" required placeholder="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">
                 <label for="input_exponent">x 10 ^</label>
-                <input type="number" id="input_exponent" name="input_exponent" required value="0" placeholder="0" style="width: 5em;">
+                <input type="number" id="input_exponent" name="input_exponent" required value="0" placeholder="0" style="width: 6em;">
             </div>
 
             <div class="error-line" id="input_error">
@@ -174,12 +177,37 @@
 
             <div class="form-line">
                 <label for="output_binary">Binary:</label>
-                <textarea id="output_binary" name="output_binary" rows="3" readonly>Binary Conversion</textarea>
+                <!-- <textarea id="output_binary" name="output_binary" rows="2" readonly>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</textarea> -->
+                <textarea id="output_binary" name="output_binary" rows="2" readonly>0 00000 0000 0000 0000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 </textarea>
+            </div>
+
+            <div class="form-line">
+                <div>
+                    <div class="form-line-line">
+                        <div class="line-part" style="width: 16.5%;">
+                            <label for="output_sign">Sign:</label>
+                            <textarea id="output_sign" name="output_sign" rows="1" readonly>0</textarea>
+                        </div>
+                        <div class="line-part" style="width: 32%;">
+                            <label for="output_combination">Combination:</label>
+                            <textarea id="output_combination" name="output_combination" rows="1" readonly>00000</textarea>
+                        </div>
+                        <div class="line-part" style="width: 51.5%;">
+                            <label for="output_exponent">Exponent:</label>
+                            <textarea id="output_exponent" name="output_exponent" rows="1" readonly>0000 0000 0000</textarea>
+                        </div>
+                    </div>
+                    <div class="form-line-line">
+                        <label for="output_BCD">Packed BCD:</label>
+                        <textarea id="output_BCD" name="output_BCD" rows="2" readonly>0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000</textarea>
+                    </div>
+                </div>
             </div>
 
             <div class="form-line">
                 <label for="input_decimal">Hexadecimal:</label>
-                <textarea id="output_hex" name="output_hex" rows="1" readonly>Hexadecimal Conversion</textarea>
+                <!-- <textarea id="output_hex" name="output_hex" rows="1" readonly>00000000000000000000000000000000</textarea> -->
+                <textarea id="output_hex" name="output_hex" rows="1" readonly>0000 0000 0000 0000 0000 0000 0000 0000</textarea>
             </div>
 
             <div class="form-button-container">
@@ -220,7 +248,13 @@
     var input_rounding_element = document.getElementById("input_rounding");
     var input_precision_element = document.getElementById("input_precision");
 
+    var input_error_element = document.getElementById("input_error");
+
     var output_binary_element = document.getElementById("output_binary");
+    var output_sign_element = document.getElementById("output_sign");
+    var output_combination_element = document.getElementById("output_combination");
+    var output_exponent_element = document.getElementById("output_exponent");
+    var output_BCD_element = document.getElementById("output_BCD");
     var output_hex_element = document.getElementById("output_hex");
 
 
@@ -230,9 +264,11 @@
     var input_rounding = input_rounding_element.value;
     var input_precision = input_precision_element.value;
 
-    var input_error = document.getElementById("input_error");
-
     var output_binary = output_binary_element.value;
+    var output_sign = output_sign_element.value;
+    var output_combination = output_combination_element.value;
+    var output_exponent = output_exponent_element.value;
+    var output_BCD = output_BCD_element.value;
     var output_hex = output_hex_element.value;
 
 
@@ -251,18 +287,19 @@
         console.log(input_exponent);
         console.log(input_rounding);
 
+        // Validate input
         if (!validateInput(input_decimal)) {
-            input_error.style.display = "block";
+            input_error_element.style.display = "block";
             return;
         }
         else {
-            input_error.style.display = "none";
+            input_error_element.style.display = "none";
         }
 
         // TODO: Convert Logic Here
-        var IEEE754 = new convert(input_decimal, 128, 32, 16383, 15);
-        if (IEEE754) {
-            let output = IEEE754.process();
+        var IEEE754_Converter = new convert(input_decimal, 128, 32, 16383, 15);
+        if (IEEE754_Converter) {
+            let output = IEEE754_Converter.process();
             output_binary = output.binStr;
             output_hex = output.hexStr;
         } else {
@@ -272,8 +309,36 @@
         console.log(output_binary);
         console.log(output_hex);
 
+        // Split binary into parts
+        output_sign = output_binary.substring(0, 1);
+        output_combination = output_binary.substring(1, 6);
+        output_exponent = output_binary.substring(6, 18);
+        output_BCD = output_binary.substring(18, 128);
+
+        // Split parts into groups with spaces
+        let exponent_groups = [];
+        for (let i = 0; i < output_exponent.length / 4; i++) {
+            exponent_groups.push(output_exponent.substring(i * 4, (i + 1) * 4));
+        }
+        output_exponent = exponent_groups.join(" ");
+        let BCD_groups = [];
+        for (let i = 0; i < output_BCD.length / 10; i++) {
+            BCD_groups.push(output_BCD.substring(i * 10, (i + 1) * 10));
+        }
+        output_BCD = BCD_groups.join(" ");
+        let hex_groups = [];
+        for (let i = 0; i < output_hex.length / 4; i++) {
+            hex_groups.push(output_hex.substring(i * 4, (i + 1) * 4));
+        }
+        output_hex = hex_groups.join(" ");
+        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_BCD;
+
         // Display outputs
         output_binary_element.value = output_binary;
+        output_sign_element.value = output_sign;
+        output_combination_element.value = output_combination;
+        output_exponent_element.value = output_exponent;
+        output_BCD_element.value = output_BCD;
         output_hex_element.value = output_hex;
     });
 
@@ -309,6 +374,10 @@
         text += `Precision: ${input_precision}\n`;
         text += `\n`;
         text += `Binary: ${output_binary}\n`;
+        text += `\tSign: ${output_sign}\n`;
+        text += `\tCombination: ${output_combination}\n`;
+        text += `\tExponent: ${output_exponent}\n`;
+        text += `\tPacked BCD: ${output_BCD}\n`;
         text += `Hexadecimal: ${output_hex}`;
 
         // Download Logic
