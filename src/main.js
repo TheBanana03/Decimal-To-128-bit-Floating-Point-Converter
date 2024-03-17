@@ -105,6 +105,7 @@ function splitBinary() {
 
 function splitBinaryBinComponents() {
 
+    // Reverse output_exponent and split into groups of 4 then reverse again
     let reversed_exponent = output_exponent.split("").reverse().join("");
     let exponent_groups = [];
     for (let i = 0; i < reversed_exponent.length / 4; i++) {
@@ -112,6 +113,7 @@ function splitBinaryBinComponents() {
     }
     output_exponent = exponent_groups.join(" ").split("").reverse().join("");
 
+    // Reverse output_mantissa and split into groups of 4 then reverse again
     let reversed_mantissa = output_mantissa.split("").reverse().join("");
     let mantissa_groups = [];
     for (let i = 0; i < reversed_mantissa.length / 4; i++) {
@@ -119,18 +121,12 @@ function splitBinaryBinComponents() {
     }
     output_mantissa = mantissa_groups.join(" ").split("").reverse().join("");
 
-    switch (input_representation) {
-        case "binary":
-            output_binary = output_sign + " " + output_exponent + " " + output_mantissa;
-            break;
-        case "decimal":
-            output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
-            break;
-    }
+    output_binary = output_sign + " " + output_exponent + " " + output_mantissa;
 }
 
 function splitDecimalBinComponents() {
 
+    // Reverse output_exponent and split into groups of 4 then reverse again
     let reversed_exponent = output_exponent.split("").reverse().join("");
     let exponent_groups = [];
     for (let i = 0; i < reversed_exponent.length / 4; i++) {
@@ -138,6 +134,7 @@ function splitDecimalBinComponents() {
     }
     output_exponent = exponent_groups.join(" ").split("").reverse().join("");
 
+    // Reverse output_mantissa and split into groups of 10 then reverse again
     let reversed_mantissa = output_mantissa.split("").reverse().join("");
     let mantissa_groups = [];
     for (let i = 0; i < reversed_mantissa.length / 10; i++) {
@@ -145,14 +142,7 @@ function splitDecimalBinComponents() {
     }
     output_mantissa = mantissa_groups.join(" ").split("").reverse().join("");
 
-    switch (input_representation) {
-        case "binary":
-            output_binary = output_sign + " " + output_exponent + " " + output_mantissa;
-            break;
-        case "decimal":
-            output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
-            break;
-    }
+    output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
 }
 
 function splitHex() {
@@ -168,6 +158,7 @@ function splitHex() {
 
 // Toggle Combination Field
 function toggleCombinationField() {
+
     if (input_representation === "binary") {
         combination_field_element.style.display = "none";
         exponent_field_element.style.width = `${100 - 16.5}%`
@@ -182,6 +173,17 @@ function toggleCombinationField() {
 // Conversion Logic
 function convertToBinaryIEEE754() {
 
+    // Round Decimal Input
+    switch (input_precision) {
+        case "single":
+            break
+        case "double":
+            break
+        case "quadruple":
+            break
+    }
+
+    // Convert to Binary Float
     var IEEE754_Converter = new window.convert(input_decimal, input_exponent, input_precision);
     if (IEEE754_Converter) {
         let output = IEEE754_Converter.process();
@@ -196,9 +198,27 @@ function convertToBinaryIEEE754() {
 
 function convertToDecimalIEEE754() {
 
+    let output;
+
+    // Round Decimal Input
+    switch (input_precision) {
+        case "single":
+            output = window.roundDecimal(input_decimal, 7, input_rounding);
+            break
+        case "double":
+            output = window.roundDecimal(input_decimal, 16, input_rounding);
+            break
+        case "quadruple":
+            output = window.roundDecimal(input_decimal, 34, input_rounding);
+            break
+    }
+    input_decimal = output.integer;
+    input_exponent += output.exponent;
+
+    // Convert to Decimal Float
     var IEEE754_Converter = new window.convertBCD(input_decimal, input_exponent, (input_decimal.charAt(0) === "-"), input_precision);
     if (IEEE754_Converter) {
-        let output = IEEE754_Converter.process();
+        output = IEEE754_Converter.process();
         output_binary = output.binStr;
         output_hex = output.hexStr;
     } else {
