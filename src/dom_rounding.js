@@ -3,11 +3,18 @@ let input = "239621.23213213"
 let exponent = 0
 let positive = true
 // const rounding = "truncate"
-// const rounding = "ceil"
+// const rounding = "ceiling"
 // const rounding = "floor"
-const rounding = "nearesttiestoeven"
+const rounding = "nearest_even"
 
-if (validateInput(input)) {
+
+
+function roundDecimal(input, roundTo, rounding) {
+
+    let overflow = ""
+    let positive = true
+
+
     // check sign
     if (input[0] === "-") {
         input = input.slice(1)
@@ -43,73 +50,79 @@ if (validateInput(input)) {
 
     // rounding logic
     if (integer.length > roundTo) {
-        if (rounding === "truncate") {
-            integer = integer.slice(0, roundTo)
 
-        } else if (rounding === "ceil") {
-            overflow = integer.substring(roundTo)
-            integer = integer.slice(0, roundTo)
-            if (positive) {
-                if (overflow.length !== "") {
-                    integer = addCarry(integer)
-                    integer = integer.replace(/0+$/, (match) => {
-                        exponent += match.length
-                        return ""
-                    })
-                }
-            } else {
+        switch (rounding) {
+            case "truncate":
                 integer = integer.slice(0, roundTo)
-            }
-            exponent += overflow.length
-            
-        } else if (rounding === "floor") {
-            overflow = integer.substring(roundTo)
-            integer = integer.slice(0, roundTo)
-            if (!positive) {
-                if (overflow.length !== "") {
-                    integer = addCarry(integer)
-                    integer = integer.replace(/0+$/, (match) => {
-                        exponent += match.length
-                        return ""
-                    })
-                }
-            } else {
+                break
+            case "ceiling":
+                overflow = integer.substring(roundTo)
                 integer = integer.slice(0, roundTo)
-            }
-            exponent += overflow.length
-
-        } else if (rounding === "nearesttiestoeven") {
-            overflow = integer.substring(roundTo)
-            integer = integer.slice(0, roundTo)
-            if (overflow.length !== "") {
-                if (overflow === "5") {
-                    if (parseInt(integer[integer.length - 1]) % 2 !== 0) {
+                if (positive) {
+                    if (overflow.length !== "") {
                         integer = addCarry(integer)
                         integer = integer.replace(/0+$/, (match) => {
                             exponent += match.length
                             return ""
                         })
                     }
-                } else if (!(parseInt(overflow[0]) < 5)) {
-                    integer = addCarry(integer)
-                    integer = integer.replace(/0+$/, (match) => {
-                        exponent += match.length
-                        return ""
-                    })
+                } else {
+                    integer = integer.slice(0, roundTo)
                 }
-            }
-            exponent += overflow.length
+                exponent += overflow.length
+                break
+            case "floor":
+                overflow = integer.substring(roundTo)
+                integer = integer.slice(0, roundTo)
+                if (!positive) {
+                    if (overflow.length !== "") {
+                        integer = addCarry(integer)
+                        integer = integer.replace(/0+$/, (match) => {
+                            exponent += match.length
+                            return ""
+                        })
+                    }
+                } else {
+                    integer = integer.slice(0, roundTo)
+                }
+                exponent += overflow.length
+                break
+            case "nearest_even":
+                overflow = integer.substring(roundTo)
+                integer = integer.slice(0, roundTo)
+                if (overflow.length !== "") {
+                    if (overflow === "5") {
+                        if (parseInt(integer[integer.length - 1]) % 2 !== 0) {
+                            integer = addCarry(integer)
+                            integer = integer.replace(/0+$/, (match) => {
+                                exponent += match.length
+                                return ""
+                            })
+                        }
+                    } else if (!(parseInt(overflow[0]) < 5)) {
+                        integer = addCarry(integer)
+                        integer = integer.replace(/0+$/, (match) => {
+                            exponent += match.length
+                            return ""
+                        })
+                    }
+                }
+                exponent += overflow.length
+                break
         }
     }
 
     // debug stuff
-    if (!positive) {
-        console.log("-" + integer)
-    } else {
-        console.log(integer)
-    }
+    if (!positive)
+        integer = "-" + integer
+
+    console.log(integer)
     console.log(exponent)
+
+    return {integer, exponent}
 }
+
+//roundDecimal(input, roundTo, rounding)
 
 
 function validateInput(input) {
@@ -138,5 +151,4 @@ function addCarry(integer) {
 
 // Export
 window.validateInput = validateInput;
-
-console.log("hello world!")
+window.roundDecimal = roundDecimal;
