@@ -1,6 +1,10 @@
 ;(function (globalObject) {
   'use strict';
 
+// DISCLAIMER: THIS IS NOT OUR CODE
+// This is code from a public library for nodejs
+// We simply copied the logic so that installing modules is unneeded
+
 /*
  *      bignumber.js v9.1.2
  *      A JavaScript library for arbitrary-precision arithmetic.
