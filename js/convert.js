@@ -31,6 +31,7 @@ class convert {
 
         this.bitSize = precision * 32;
         this.hexSize = this.bitSize / 4;
+        this.inputNum = this.inputNum.times(Math.pow(10, this.expDegree));
     }
     
     process () {
