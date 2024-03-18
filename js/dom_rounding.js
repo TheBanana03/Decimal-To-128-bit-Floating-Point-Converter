@@ -9,11 +9,11 @@ const rounding = "nearest_even"
 
 
 
-function roundDecimal(input, roundTo, rounding) {
+function roundDecimal(input, roundTo, rounding, exp) {
 
     let overflow = ""
     let positive = true
-    let exponent = 0
+    let exponent = exp
 
 
     // check sign

@@ -204,13 +204,13 @@ function convertToDecimalIEEE754() {
     // Round Decimal Input
     switch (input_precision) {
         case "single":
-            output = window.roundDecimal(input_decimal, 7, input_rounding);
+            output = window.roundDecimal(input_decimal, 7, input_rounding, input_exponent);
             break
         case "double":
-            output = window.roundDecimal(input_decimal, 16, input_rounding);
+            output = window.roundDecimal(input_decimal, 16, input_rounding, input_exponent);
             break
         case "quadruple":
-            output = window.roundDecimal(input_decimal, 34, input_rounding);
+            output = window.roundDecimal(input_decimal, 34, input_rounding, input_exponent);
             break
     }
     input_decimal = output.integer;
