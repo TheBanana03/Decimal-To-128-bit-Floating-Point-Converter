@@ -13,6 +13,7 @@ function roundDecimal(input, roundTo, rounding) {
 
     let overflow = ""
     let positive = true
+    let exponent = 0
 
 
     // check sign

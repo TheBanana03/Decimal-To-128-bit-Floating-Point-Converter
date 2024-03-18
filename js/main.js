@@ -216,7 +216,7 @@ function convertToDecimalIEEE754() {
     input_decimal = output.integer;
     input_exponent = output.exponent;
     input_positive = output.positive;
-    console.log(input_positive);
+    console.log(output.exponent);
 
     // Convert to Decimal Float
     var IEEE754_Converter = new window.convertBCD(input_decimal, input_exponent, input_positive, input_precision);
