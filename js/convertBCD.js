@@ -1,17 +1,17 @@
 class convertBCD {
-    constructor(inputNum, expDegree, isNegative, precision) {
+    constructor(inputNum, expDegree, isPositive, precision) {
         this.inputNum = inputNum;
-        this.expDegree = expDegree;
+        this.expDegree = parseInt(expDegree);
         this.outputStr = "";
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
 
-        switch (isNegative) {
+        switch (isPositive) {
             case true:
-                this.isNegative = 1;
+                this.isNegative = 0;
                 break;
 
             case false:
-                this.isNegative = 0;
+                this.isNegative = 1;
                 break;
         }
 
@@ -58,6 +58,9 @@ class convertBCD {
         console.log(this.inputNum);
         this.expDegree += this.expBias;
         tempArr = this.convertToBin(this.expSize + 2, this.expDegree);
+
+        console.log(this.expDegree);
+        console.log(tempArr);
 
         bitArr1 = this.convertToBin(4, this.inputNum[0]);
 

@@ -41,6 +41,7 @@ function getInputs() {
     // Get all element values
     input_decimal = input_decimal_element.value;
     input_exponent = input_exponent_element.value;
+    input_positive = true;
     input_rounding = input_rounding_element.value;
     input_representation = input_representation_element.value;
     input_precision = input_precision_element.value;
@@ -213,10 +214,12 @@ function convertToDecimalIEEE754() {
             break
     }
     input_decimal = output.integer;
-    input_exponent += output.exponent;
+    input_exponent = output.exponent;
+    input_positive = output.positive;
+    console.log(input_positive);
 
     // Convert to Decimal Float
-    var IEEE754_Converter = new window.convertBCD(input_decimal, input_exponent, (input_decimal.charAt(0) === "-"), input_precision);
+    var IEEE754_Converter = new window.convertBCD(input_decimal, input_exponent, input_positive, input_precision);
     if (IEEE754_Converter) {
         output = IEEE754_Converter.process();
         output_binary = output.binStr;

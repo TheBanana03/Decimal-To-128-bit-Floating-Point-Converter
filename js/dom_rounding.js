@@ -114,12 +114,13 @@ function roundDecimal(input, roundTo, rounding) {
 
     // debug stuff
     if (!positive)
-        integer = "-" + integer
+        positive = false
 
     console.log(integer)
     console.log(exponent)
+    console.log(positive)
 
-    return {integer, exponent}
+    return {integer, exponent, positive}
 }
 
 //roundDecimal(input, roundTo, rounding)
