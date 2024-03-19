@@ -40,6 +40,7 @@ class convertBCD {
         let expLim = ((Math.pow(2, this.expSize + 2) - Math.pow(2, this.expSize))) - 1;
         let expOffset = Math.pow(2, precision + (precision % 3) + (precision % 2)) - (4 - precision);
         this.expBias = expLim - parseInt(expLim / 2) + expOffset;
+        console.log(this.strLen);
     }
     
     process () {

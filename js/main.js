@@ -185,7 +185,7 @@ function convertToBinaryIEEE754() {
     }
 
     // Convert to Binary Float
-    var IEEE754_Converter = new window.convert(input_decimal, input_exponent, input_precision);
+    var IEEE754_Converter = new window.convert(input_decimal, input_exponent, input_precision, input_rounding);
     if (IEEE754_Converter) {
         let output = IEEE754_Converter.process();
         output_binary = output.binStr;

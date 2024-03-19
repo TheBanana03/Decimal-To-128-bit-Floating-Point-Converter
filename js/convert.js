@@ -1,9 +1,10 @@
 const BigNumber = window.BigNumber;
 
 class convert {
-    constructor(inputNum, expDegree, precision) {
+    constructor(inputNum, expDegree, precision, round) {
         this.inputNum = new BigNumber(inputNum);
         this.expDegree = expDegree;
+        this.roundMthd = round;
         this.outputArr = [];
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
         this.negNum = 0;
@@ -67,6 +68,7 @@ class convert {
 
         // Get binary representation for fractional portion
         let frcPart = this.inputNum.abs() - this.inputNum.abs().integerValue(BigNumber.ROUND_FLOOR);
+        console.log (frcPart);
         let frcBitsTemp = this.convertFract(frcPart);
         let frcBits = [];
 
@@ -140,6 +142,33 @@ class convert {
                 this.outputArr.push(0);
             }
         }
+
+        this.roundOutput ("Down");
+    }
+
+    // Rounds the output array either up or down
+    roundOutput (rndTo) {
+        let rndMod = -1;
+
+        switch (rndTo) {
+            case "Up":
+                rndMod = 0;
+                break;
+            case "Down":
+                rndMod = 1;
+                break;
+        }
+
+        let currPos = this.bitSize - 1;
+        
+        // Rounding loop
+        while (this.outputArr[currPos] % 2 != rndMod) {
+            this.outputArr[currPos] = (this.outputArr[currPos] + 1) % 2;
+            currPos--;
+        }
+        if (this.outputArr[currPos] % 2 == rndMod) {
+            this.outputArr[currPos] = (this.outputArr[currPos] + 1) % 2;
+        }
     }
 
     // Print
@@ -170,14 +199,20 @@ class convert {
     }
 
     // Convert fractional to binary
-    convertFract (srcNum) {
+    convertFract (tmpNum) {
         let i = 0;
         let dstArr = [];
+        let srcNum = new BigNumber(tmpNum.toString())
         while (srcNum != 0) {
-            srcNum *= 2;
-            dstArr.push(parseInt(srcNum));
-            if (parseInt(srcNum) > 0) {
-                srcNum--;
+            srcNum = srcNum.times(2);
+            dstArr.push(srcNum.integerValue(BigNumber.ROUND_FLOOR));
+            if (srcNum.integerValue(BigNumber.ROUND_FLOOR).gt(0)) {
+                srcNum = srcNum.minus(1);
+            }
+
+            i++;
+            if (i > this.bitSize + this.expSize) {
+                break;
             }
         }
 
@@ -186,10 +221,10 @@ class convert {
 
     // Convert nibble to hex
     convertToHex (bit1, bit2, bit3, bit4) {
-        let hexIndex = bit4;
-        hexIndex += bit3 * 2;
-        hexIndex += bit2 * 4;
-        hexIndex += bit1 * 8;
+        let hexIndex = parseInt(bit4);
+        hexIndex += parseInt(bit3) * 2;
+        hexIndex += parseInt(bit2) * 4;
+        hexIndex += parseInt(bit1) * 8;
 
         return this.hexLib[hexIndex];
     }
