@@ -1,20 +1,16 @@
 const roundTo = 10
-let input = "239621.23213213"
-let exponent = 0
-let positive = true
+const input = "1234567891.500000"
+const exponent = 0
 // const rounding = "truncate"
 // const rounding = "ceiling"
 // const rounding = "floor"
 const rounding = "nearest_even"
-
-
 
 function roundDecimal(input, roundTo, rounding, exp) {
 
     let overflow = ""
     let positive = true
     let exponent = exp
-
 
     // check sign
     if (input[0] === "-") {
@@ -28,6 +24,7 @@ function roundDecimal(input, roundTo, rounding, exp) {
 
     // get fraction portion, and remove insignificant zeros
     let fraction = input.split(".")[1]
+
     // if no fraction, remove trailing zeros from integer and adjust exponent
     if (fraction === undefined) {
         fraction = ""
@@ -62,10 +59,6 @@ function roundDecimal(input, roundTo, rounding, exp) {
                 if (positive) {
                     if (overflow.length !== "") {
                         integer = addCarry(integer)
-                        integer = integer.replace(/0+$/, (match) => {
-                            exponent += match.length
-                            return ""
-                        })
                     }
                 } else {
                     integer = integer.slice(0, roundTo)
@@ -78,10 +71,6 @@ function roundDecimal(input, roundTo, rounding, exp) {
                 if (!positive) {
                     if (overflow.length !== "") {
                         integer = addCarry(integer)
-                        integer = integer.replace(/0+$/, (match) => {
-                            exponent += match.length
-                            return ""
-                        })
                     }
                 } else {
                     integer = integer.slice(0, roundTo)
@@ -95,17 +84,9 @@ function roundDecimal(input, roundTo, rounding, exp) {
                     if (overflow === "5") {
                         if (parseInt(integer[integer.length - 1]) % 2 !== 0) {
                             integer = addCarry(integer)
-                            integer = integer.replace(/0+$/, (match) => {
-                                exponent += match.length
-                                return ""
-                            })
                         }
                     } else if (!(parseInt(overflow[0]) < 5)) {
                         integer = addCarry(integer)
-                        integer = integer.replace(/0+$/, (match) => {
-                            exponent += match.length
-                            return ""
-                        })
                     }
                 }
                 exponent += overflow.length
@@ -113,9 +94,15 @@ function roundDecimal(input, roundTo, rounding, exp) {
         }
     }
 
-    // debug stuff
-    if (!positive)
-        positive = false
+    integer = integer.replace(/^0+/, "")
+    integer = integer.replace(/0+$/, (match) => {
+        exponent += match.length
+        return ""
+    })
+    if (integer === "" && fraction === "") {
+        integer = "0"
+        exponent = 0
+    }
 
     console.log(integer)
     console.log(exponent)
@@ -124,7 +111,7 @@ function roundDecimal(input, roundTo, rounding, exp) {
     return {integer, exponent, positive}
 }
 
-//roundDecimal(input, roundTo, rounding)
+// roundDecimal(input, roundTo, rounding, exponent)
 
 
 function validateInput(input) {

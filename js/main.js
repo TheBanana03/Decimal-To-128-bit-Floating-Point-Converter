@@ -33,7 +33,7 @@ var output_exponent = output_exponent_element.value;
 var output_mantissa = output_mantissa_element.value;
 var output_hex = output_hex_element.value;
 
-
+var you_are_my_special = false;
 
 // Get Inputs and Put Outputs
 function getInputs() {
@@ -231,6 +231,57 @@ function convertToDecimalIEEE754() {
     }
 }
 
+function specialCases() {
+    console.log("Test Special");
+
+    var test_input = input_decimal.trim();
+    var test_exponent = input_exponent.trim();
+    var test_sign;
+
+    // Check the sign of the input
+    if (test_input[0] === '-') {
+        test_sign = false;
+    } 
+    
+    else if (!isNaN(test_input[0])) {
+        test_sign = true;
+    } 
+
+    // Check Input
+    // console.log("Input Decimal:", test_input);
+    // console.log("Input Exponent:", test_exponent);
+    // console.log("Input Sign:", test_sign);
+
+    // If its +0 or -0
+    if (parseFloat(test_input) === 0) {
+ 
+        if(test_sign){
+            output_sign = "0"; 
+        }
+
+        else{
+            output_sign = "1"; 
+        }
+        
+        output_combination = "00000"; 
+        
+        output_exponent = "0".repeat(12); 
+        output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+        output_mantissa = "0".repeat(110); 
+        output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
+
+        output_hex = "0".repeat(32); 
+        output_hex = output_hex.match(/.{1,4}/g).join(" ");
+
+        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
+        you_are_my_special = true;
+    }
+
+    // if its +Infinity or -Infinity
+    
+    // if its sNan or qNan
+}
 
 
 // On form submit
@@ -240,40 +291,46 @@ input_form.addEventListener("submit", function (event) {
     // Get inputs
     getInputs();
 
-    // Validate input
-    if (!window.validateInput(input_decimal)) {
-        input_error_element.style.display = "block";
-        return;
-    }
-    else {
-        input_error_element.style.display = "none";
-    }
+    // Test inputs for special cases
+    you_are_my_special = false
+    specialCases()
+    
+    if(!you_are_my_special){
+        // Validate input
+        if (!window.validateInput(input_decimal)) {
+            input_error_element.style.display = "block";
+            return;
+        }
+        else {
+            input_error_element.style.display = "none";
+        }
 
-    // TODO: Convert Logic Here
-    switch (input_representation) {
-        case "binary":
-            convertToBinaryIEEE754();
-            break;
-        case "decimal":
-            convertToDecimalIEEE754();
-            break;
+        // TODO: Convert Logic Here
+        switch (input_representation) {
+            case "binary":
+                convertToBinaryIEEE754();
+                break;
+            case "decimal":
+                convertToDecimalIEEE754();
+                break;
+        }
+
+        // Toggle Combination Field
+        toggleCombinationField();
+
+        // Split and format outputs
+        splitBinary();
+        switch (input_representation) {
+            case "binary":
+                splitBinaryBinComponents();
+                break;
+            case "decimal":
+                splitDecimalBinComponents();
+                break;
+        }
+        splitHex();
     }
-
-    // Toggle Combination Field
-    toggleCombinationField();
-
-    // Split and format outputs
-    splitBinary();
-    switch (input_representation) {
-        case "binary":
-            splitBinaryBinComponents();
-            break;
-        case "decimal":
-            splitDecimalBinComponents();
-            break;
-    }
-    splitHex();
-
+    
     // Display outputs
     putOutputs();
 });
