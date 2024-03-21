@@ -257,21 +257,22 @@ function specialCases() {
  
         if(test_sign){
             output_sign = "0"; 
+            output_hex = "0" + "x".repeat(31); 
         }
 
         else{
-            output_sign = "1"; 
+            output_sign = "1";
+            output_hex = "8" + "x".repeat(31);  
         }
         
-        output_combination = "00000"; 
+        output_combination = "0".repeat(5); 
         
-        output_exponent = "0".repeat(12); 
+        output_exponent = "x".repeat(12); 
         output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
 
-        output_mantissa = "0".repeat(110); 
+        output_mantissa = "x".repeat(110); 
         output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
 
-        output_hex = "0".repeat(32); 
         output_hex = output_hex.match(/.{1,4}/g).join(" ");
 
         output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
@@ -279,8 +280,85 @@ function specialCases() {
     }
 
     // if its +Infinity or -Infinity
+    else if(test_input == "Inf"){
+        output_sign = "0";
+
+        output_combination = "1".repeat(4) + "0"; 
+        
+        output_exponent = "x".repeat(12); 
+        output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+        output_mantissa = "x".repeat(110); 
+        output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
+
+        // output_hex = "7FFF8" + "0".repeat(27);
+        // output_hex = output_hex.match(/.{1,4}/g).join(" ");
+
+        output_hex = "7" + "x".repeat(31);
+        output_hex = output_hex.match(/.{1,4}/g).join(" ");
+
+        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
+        you_are_my_special = true;
+    }
+
+    else if(test_input == "-Inf"){
+        output_sign = "1";
+
+        output_combination = "1".repeat(4) + "0"; 
+        
+        output_exponent = "x".repeat(12); 
+        output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+        output_mantissa = "x".repeat(110); 
+        output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
+
+        // output_hex = "F".repeat(4) + "8" +  "0".repeat(27);
+        // output_hex = output_hex.match(/.{1,4}/g).join(" ");
+
+        output_hex = "F" + "x".repeat(31);
+        output_hex = output_hex.match(/.{1,4}/g).join(" ");
+
+        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
+        you_are_my_special = true;
+    }
     
     // if its sNan or qNan
+
+    else if(test_input == "sNaN"){
+        output_sign = "x";
+
+        output_combination = "1".repeat(5); 
+        
+        output_exponent = "1" + "x".repeat(11); 
+        output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+        output_mantissa = "x".repeat(110); 
+        output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
+
+        output_hex = "x".repeat(32);
+        output_hex = output_hex.match(/.{1,4}/g).join(" ");
+
+        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
+        you_are_my_special = true;
+    }
+
+    else if(test_input == "qNaN"){
+        output_sign = "x";
+
+        output_combination = "1".repeat(5); 
+        
+        output_exponent = "0" + "x".repeat(11); 
+        output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+        output_mantissa = "x".repeat(110); 
+        output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
+
+        output_hex = "x".repeat(32);
+        output_hex = output_hex.match(/.{1,4}/g).join(" ");
+
+        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
+        you_are_my_special = true;
+    }
 }
 
 
