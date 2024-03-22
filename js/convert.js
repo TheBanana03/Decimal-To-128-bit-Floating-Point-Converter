@@ -2,12 +2,29 @@ const BigNumber = window.BigNumber;
 
 class convert {
     constructor(inputNum, expDegree, precision, round) {
+        console.log(inputNum);
         this.inputNum = new BigNumber(inputNum);
         this.expDegree = expDegree;
-        this.roundMthd = round;
         this.outputArr = [];
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
         this.negNum = 0;
+
+        switch (round) {
+            case "truncate":
+                this.roundMthd = -1;
+                break;
+            case "ceiling":
+                this.roundMthd = 0;
+                break;
+            case "floor":
+                this.roundMthd = 1;
+                break;
+            case "nearest_even":
+                this.roundMthd = 2;
+                break;
+        }
+
+        console.log(this.roundMthd);
 
         switch (precision) {
 
@@ -15,27 +32,45 @@ class convert {
                 precision = 1;
                 this.expBias = 127;
                 this.expSize = 8;
+                this.maxLimit = "3.4028235e38";
                 break;
 
             case "double":
                 precision = 2;
                 this.expBias = 1023;
                 this.expSize = 11;
+                this.maxLimit = "1.8e+308";
                 break;
 
             case "quadruple":
                 precision = 4;
                 this.expBias = 16383;
                 this.expSize = 15;
+                this.maxLimit = "1.8e+3008";
                 break;
         }
 
         this.bitSize = precision * 32;
         this.hexSize = this.bitSize / 4;
-        this.inputNum = this.inputNum.times(Math.pow(10, this.expDegree));
+
+        this.inputNum = this.inputNum.times(BigNumber(10).exponentiatedBy(this.expDegree));
+        this.expDegree = 0;
     }
     
     process () {
+        let isCase = this.chckSpecial();
+
+        if (isCase == "inf") {
+            if (this.inputNum < 0) {
+                this.negNum = 1;
+            }
+            let infExp = this.convertToBin(this.expSize, this.expBias * 2 + 1);
+            let infMts = [];
+            this.pushToOutput (infExp, infMts);
+            var {binStr, hexStr} = this.getOutputStr();
+            return {binStr, hexStr};
+        }
+
         // If negative
         if (this.inputNum < 0) {
             this.negNum = 1;
@@ -111,6 +146,17 @@ class convert {
         return {binStr, hexStr};
     }
 
+    // Checks for special cases
+    chckSpecial () {
+        let tempNum = new BigNumber(this.inputNum.toString());
+        let maxLimit = new BigNumber(this.maxLimit);
+        console.log(tempNum.toString());
+        if (tempNum.abs().gt(maxLimit)) {
+            return "inf";
+        }
+    }
+
+    // Converts bin to hex, then gets string representations of both bin and hex
     getOutputStr () {
         var binStr = "";
         var hexStr = "";
@@ -143,10 +189,71 @@ class convert {
             }
         }
 
-        this.roundOutput ("Down");
+        if (mtsArr.length) {
+            let rndStr = this.cmpExcess (mtsArr);
+            switch (this.roundMthd) {
+                case 0:
+                case 1:
+                    switch (rndStr) {
+                        case "Greater":
+                        case "Lesser":
+                            if (this.negNum == this.roundMthd) {
+                                this.roundOutput ("Up");
+                            }
+                            break;
+                    }
+                break;
+                case 2:
+                    switch (rndStr) {
+                        case "Greater":
+                            this.roundOutput("Up");
+                            break;
+                        case "Even":
+                            if (this.outputArr[this.bitSize - 1] == 1) {
+                                this.roundOutput("Up");
+                            }
+                            break;
+                    }
+                break;
+            }
+        }
     }
 
-    // Rounds the output array either up or down
+    // Determines where excess bits lean towards
+    cmpExcess (mtsArr) {
+        let rndStr = "None";
+        let arrLen = mtsArr.length - 1;
+        let frstBit = mtsArr[arrLen];
+        let zeroCnt = 0;
+        let i = 0;
+
+        console.log(arrLen);
+
+        // Count Zeroes
+        if (frstBit == 1) {
+            for (i = 0; i < arrLen; i++) {
+                if (mtsArr.pop() == 0) {
+                    zeroCnt++;
+                }
+            }
+            if (zeroCnt == arrLen - 1) {
+                rndStr = "Tied";
+            }
+            else {
+                rndStr = "Greater";
+            }
+        }
+        else {
+            rndStr = "Lesser";
+        }
+
+        console.log(i);
+        console.log(rndStr);
+
+        return rndStr;
+    }
+
+    // Adds or subtracts the output by 1
     roundOutput (rndTo) {
         let rndMod = -1;
 
@@ -162,8 +269,8 @@ class convert {
         let currPos = this.bitSize - 1;
         
         // Rounding loop
-        while (this.outputArr[currPos] % 2 != rndMod) {
-            this.outputArr[currPos] = (this.outputArr[currPos] + 1) % 2;
+        while (parseInt(this.outputArr[currPos].toString()) % 2 != rndMod) {
+            this.outputArr[currPos] = (parseInt(this.outputArr[currPos].toString()) + 1) % 2;
             currPos--;
         }
         if (this.outputArr[currPos] % 2 == rndMod) {
