@@ -245,6 +245,16 @@ function specialCases() {
     var test_exponent = input_exponent.trim();
     var test_precision = input_precision;
     var test_representation = input_representation;
+    var test_sign;
+
+    // Check the sign of the input
+    if (test_input[0] == '-') {
+        test_sign = false;
+    } 
+    
+    else if (!isNaN(test_input[0])) {
+        test_sign = true;
+    } 
 
     var exponent = 0;
     var mantissa = 0;
@@ -284,74 +294,357 @@ function specialCases() {
         case "binary":
             switch (test_precision){
                 case "single":
-        
+                    exponent = 8;
+                    mantissa = 27;
+                    hex = 8;
+                    exponent_limit = 127;
                     break;
                 case "double":
-                    
+                    exponent = 11;
+                    mantissa = 52;
+                    hex = 16;
+                    exponent_limit = 1023;
                     break;
                 case "quadruple":
-                    
+                    exponent = 15;
+                    mantissa = 112;
+                    hex = 32;
+                    exponent_limit = 16383;
                     break;
             }
             break;
     }
 
+    if (test_representation == "decimal"){
+        // if its +Infinity
+        if(test_input == "inf" || (parseInt(test_exponent) > exponent_limit && test_input.charAt(0) != '-')){
+            output_sign = "0";
 
-    // if its +Infinity
-    if(test_input == "inf" || (parseInt(test_exponent) > exponent_limit && test_input.charAt(0) != '-')){
-        output_sign = "0";
+            output_combination = "1".repeat(4) + "0"; 
+            
+            output_exponent = "-".repeat(exponent); 
+            output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
 
-        output_combination = "1".repeat(4) + "0"; 
+            output_mantissa = "-".repeat(mantissa); 
+            output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
+
+            output_hex = "7" + "-".repeat(hex);
+            output_hex = output_hex.match(/.{1,4}/g).join(" ");
+
+            output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
+            you_are_my_special = true;
+        }
+        // if its -Infinity
+        else if(test_input == "-inf" || (parseInt(test_exponent) > exponent_limit && test_input.charAt(0) == '-')){
+            output_sign = "1";
+
+            output_combination = "1".repeat(4) + "0"; 
+            
+            output_exponent = "-".repeat(exponent); 
+            output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+            output_mantissa = "-".repeat(mantissa); 
+            output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
+
+            output_hex = "F" + "-".repeat(hex);
+            output_hex = output_hex.match(/.{1,4}/g).join(" ");
+
+            output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
+            you_are_my_special = true;
+        }
         
-        output_exponent = "-".repeat(exponent); 
-        output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+        // if its NaN
+        else if(test_input == "nan" || test_input == "qnan" || test_input == "snan"){
+            output_sign = "-";
 
-        output_mantissa = "-".repeat(mantissa); 
-        output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
+            output_combination = "1".repeat(5); 
+            
+            output_exponent = "-".repeat(exponent); 
+            output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
 
-        output_hex = "7" + "-".repeat(hex);
-        output_hex = output_hex.match(/.{1,4}/g).join(" ");
+            output_mantissa = "-".repeat(mantissa); 
+            output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
 
-        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
-        you_are_my_special = true;
+            output_hex = "-".repeat(hex);
+            output_hex = output_hex.match(/.{1,4}/g).join(" ");
+
+            output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
+            you_are_my_special = true;
+        }
     }
-    // if its -Infinity
-    else if(test_input == "-inf" || (parseInt(test_exponent) > exponent_limit && test_input.charAt(0) == '-')){
-        output_sign = "1";
 
-        output_combination = "1".repeat(4) + "0"; 
-        
-        output_exponent = "-".repeat(exponent); 
-        output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
-
-        output_mantissa = "-".repeat(mantissa); 
-        output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
-
-        output_hex = "F" + "-".repeat(hex);
-        output_hex = output_hex.match(/.{1,4}/g).join(" ");
-
-        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
-        you_are_my_special = true;
-    }
+    else if(test_representation == "binary"){
+        // If its +0 or -0
+        if (parseFloat(test_input) == 0) {
     
-    // if its NaN
-    else if(test_input == "nan" || test_input == "qnan" || test_input == "snan"){
-        output_sign = "-";
+            if(test_sign){
+                output_sign = "0";
+                output_hex = "0".repeat(hex); 
+                output_hex = output_hex.match(/.{1,4}/g).join(" "); 
+            }
 
-        output_combination = "1".repeat(5); 
-        
-        output_exponent = "-".repeat(exponent); 
-        output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+            else{
+                output_sign = "1";
+                output_hex = "8" + "0".repeat(hex - 1); 
+                output_hex = output_hex.match(/.{1,4}/g).join(" "); 
+            }
+            
+            if(test_precision == "single"){
+                output_exponent = "0".repeat(exponent); 
+                output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
 
-        output_mantissa = "-".repeat(mantissa); 
-        output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
+                output_mantissa = "0".repeat(mantissa - (mantissa - 3)) + " ";
 
-        output_hex = "-".repeat(hex);
-        output_hex = output_hex.match(/.{1,4}/g).join(" ");
+                for (let i = 0; i < 20; i += 4) {
+                    output_mantissa += "0".repeat(4) + " "; 
+                } 
 
-        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
-        you_are_my_special = true;
+                output_mantissa = output_mantissa.trim();
+            }
+
+            else{
+                output_exponent = "0".repeat(exponent - (exponent - 3)) + " ";
+
+                for (let i = 0; i < (exponent - 3); i += 4) {
+                    output_exponent += "0".repeat(4) + " "; 
+                } 
+
+                output_exponent = output_exponent.trim();
+
+                output_mantissa = "0".repeat(mantissa); 
+                output_mantissa = output_mantissa.match(/.{1,4}/g).join(" ");
+            }
+
+            output_binary = output_sign + " " + output_exponent + " " + output_mantissa;
+            you_are_my_special = true;
+        }
+
+        // If its Denormalized
+        if (test_input == "dnrm") {
+    
+            output_sign = "-";
+
+            if(test_precision == "single"){
+                output_exponent = "0".repeat(exponent); 
+                output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+                output_mantissa = "1"+ "-".repeat(mantissa - (mantissa - 4)) + " ";
+
+                for (let i = 0; i < (exponent - 3); i += 4) {
+                    output_mantissa += "-".repeat(4) + " "; 
+                } 
+
+                output_mantissa = output_mantissa.trim();
+
+                output_hex = "-".repeat(1) + "0" + "-".repeat(hex - 2); 
+            }
+
+            else{
+                output_exponent = "0".repeat(exponent - (exponent - 3)) + " ";
+
+                for (let i = 0; i < (exponent - 3); i += 4) {
+                    output_exponent += "0".repeat(4) + " "; 
+                } 
+
+                output_exponent = output_exponent.trim();
+
+                output_mantissa = "1" + "-".repeat(mantissa - 1); 
+                output_mantissa = output_mantissa.match(/.{1,4}/g).join(" ");
+
+                if (test_precision == "double"){
+                    output_hex = "-".repeat(1) + "0".repeat(2) + "-".repeat(hex - 3); 
+                }
+
+                else{
+                    output_hex = "-".repeat(1) + "0".repeat(3) + "-".repeat(hex - 4); 
+                }
+            }
+
+            output_hex = output_hex.match(/.{1,4}/g).join(" "); 
+
+            output_binary = output_sign + " " + output_exponent + " " + output_mantissa;
+            you_are_my_special = true;
+        }
+
+        // If its +Infinity
+        else if (test_input == "inf") {
+            output_sign = "0";
+
+            if(test_precision == "single"){
+                output_exponent = "1".repeat(exponent); 
+                output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+                output_mantissa = "0".repeat(mantissa - (mantissa - 3)) + " ";
+
+                for (let i = 0; i < 20; i += 4) {
+                    output_mantissa += "0".repeat(4) + " "; 
+                } 
+
+                output_mantissa = output_mantissa.trim();
+                output_hex = "7" + "F".repeat(1) + "8" + "0".repeat(hex - 3);
+            }
+
+            else{
+                output_exponent = "1".repeat(exponent - (exponent - 3)) + " ";
+
+                for (let i = 0; i < (exponent - 3); i += 4) {
+                    output_exponent += "1".repeat(4) + " "; 
+                } 
+
+                output_exponent = output_exponent.trim();
+
+                output_mantissa = "0".repeat(mantissa); 
+                output_mantissa = output_mantissa.match(/.{1,4}/g).join(" ");
+
+                if (test_precision == "double"){
+                    output_hex = "7" + "F".repeat(2) + "0".repeat(hex - 3);
+                }
+
+                else{
+                    output_hex = "7" + "F".repeat(3) + "0".repeat(hex - 4);
+                }
+            }
+
+            output_hex = output_hex.match(/.{1,4}/g).join(" "); 
+             
+            output_binary = output_sign + " " + output_exponent + " " + output_mantissa;
+            you_are_my_special = true;
+        }
+
+        // If its -Infinity
+        else if (test_input == "-inf") {
+            output_sign = "1";
+
+            if(test_precision == "single"){
+                output_exponent = "1".repeat(exponent); 
+                output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+                output_mantissa = "0".repeat(mantissa - (mantissa - 3)) + " ";
+
+                for (let i = 0; i < 20; i += 4) {
+                    output_mantissa += "0".repeat(4) + " "; 
+                } 
+
+                output_mantissa = output_mantissa.trim();
+                output_hex = "F".repeat(2) + "8" + "0".repeat(hex - 3);
+            }
+
+            else{
+                output_exponent = "1".repeat(exponent - (exponent - 3)) + " ";
+
+                for (let i = 0; i < (exponent - 3); i += 4) {
+                    output_exponent += "1".repeat(4) + " "; 
+                } 
+
+                output_exponent = output_exponent.trim();
+
+                output_mantissa = "0".repeat(mantissa); 
+                output_mantissa = output_mantissa.match(/.{1,4}/g).join(" ");
+
+                if (test_precision == "double"){
+                    output_hex = "F".repeat(3) + "0".repeat(hex - 3);
+                }
+
+                else{
+                    output_hex = "F".repeat(4) + "0".repeat(hex - 4);
+                }
+            }
+
+            output_hex = output_hex.match(/.{1,4}/g).join(" "); 
+             
+            output_binary = output_sign + " " + output_exponent + " " + output_mantissa;
+            you_are_my_special = true;
+        }
+
+        else if (test_input == "snan") {
+            output_sign = "-";
+
+            if(test_precision == "single"){
+                output_exponent = "1".repeat(exponent); 
+                output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+                output_mantissa = "01" + "-".repeat(mantissa - (mantissa - 1)) + " ";
+
+                for (let i = 0; i < 20; i += 4) {
+                    output_mantissa += "-".repeat(4) + " "; 
+                } 
+
+                output_mantissa = output_mantissa.trim();
+                output_hex = "-" + "F".repeat(1) + "-".repeat(hex - 2);
+            }
+
+            else{
+                output_exponent = "1".repeat(exponent - (exponent - 3)) + " ";
+
+                for (let i = 0; i < (exponent - 3); i += 4) {
+                    output_exponent += "1".repeat(4) + " "; 
+                } 
+
+                output_exponent = output_exponent.trim();
+
+                output_mantissa = "01" + "-".repeat(mantissa - 2); 
+                output_mantissa = output_mantissa.match(/.{1,4}/g).join(" ");
+
+                if (test_precision == "double"){
+                    output_hex = "-" + "F".repeat(2) + "-".repeat(hex - 3);
+                }
+
+                else{
+                    output_hex = "-" + "F".repeat(3) + "-".repeat(hex - 4);
+                }
+            }
+
+            output_hex = output_hex.match(/.{1,4}/g).join(" "); 
+             
+            output_binary = output_sign + " " + output_exponent + " " + output_mantissa;
+            you_are_my_special = true;
+        }
+
+        else if (test_input == "qnan") {
+            output_sign = "-";
+
+            if(test_precision == "single"){
+                output_exponent = "1".repeat(exponent); 
+                output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
+
+                output_mantissa = "1" + "-".repeat(mantissa - (mantissa - 2)) + " ";
+
+                for (let i = 0; i < 20; i += 4) {
+                    output_mantissa += "-".repeat(4) + " "; 
+                } 
+
+                output_mantissa = output_mantissa.trim();
+                output_hex = "-" + "F".repeat(1) + "-".repeat(hex - 2);
+            }
+
+            else{
+                output_exponent = "1".repeat(exponent - (exponent - 3)) + " ";
+
+                for (let i = 0; i < (exponent - 3); i += 4) {
+                    output_exponent += "1".repeat(4) + " "; 
+                } 
+
+                output_exponent = output_exponent.trim();
+
+                output_mantissa = "1" + "-".repeat(mantissa - 1); 
+                output_mantissa = output_mantissa.match(/.{1,4}/g).join(" ");
+
+                if (test_precision == "double"){
+                    output_hex = "-" + "F".repeat(2) + "-".repeat(hex - 3);
+                }
+
+                else{
+                    output_hex = "-" + "F".repeat(3) + "-".repeat(hex - 4);
+                }
+            }
+
+            output_hex = output_hex.match(/.{1,4}/g).join(" "); 
+             
+            output_binary = output_sign + " " + output_exponent + " " + output_mantissa;
+            you_are_my_special = true;
+        }
     }
+
 }
 
 
