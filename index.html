@@ -7,133 +7,7 @@
 <title>CSARCH2 S13 Group 4 Simulation Project</title>
 <link rel="icon" type="image/x-icon" href="./pictures/icon.ico">
 
-<link rel="stylesheet" href="">
-<style>
-    body {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        font-family: Arial, sans-serif;
-    }
-    body::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url("./pictures/cat_background.jpg");
-        /* background-size: cover; */
-        background-repeat: no-repeat;
-        background-position: center;
-        opacity: 0.5;
-        z-index: -1;
-    }
-    .container {
-        max-width: 750px;
-        width: 100%;
-        padding: 20px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        background-color: #fff;
-    }
-    .body-block {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 0.75em;
-        margin-bottom: 20px;
-    }
-    form {
-        margin-bottom: 20px;
-    }
-    h2 {
-        margin: 0.25em;
-        margin-bottom: 1em;
-    }
-    .form-line, .line-part, .error-line {
-        display: flex;
-        align-items: center;
-    }
-    .error-line {
-        color: #ff0000;
-        font-size: 0.9em;
-        margin: 0em;
-        margin-left: 0.5em;
-        margin-top: -1.5em;
-        display: none;
-    }
-    label, input, select, textarea {
-        margin: 0.5em;
-    }
-    .form-line label {
-        white-space: nowrap;
-    }
-    input, select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
-    button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: #0056b3;
-    }
-    .form-button-container {
-        margin: auto;
-        width: fit-content;
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-    }
-    textarea {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        resize: none;
-        font-size: 1.05em;
-    }
-    .download-btn {
-        padding: 10px 20px;
-        background-color: #28a745;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    .download-btn:hover {
-        background-color: #218838;
-    }
-    .group-members {
-        display: flex;
-        text-align: center;
-        align-items: center;
-        justify-content: center;
-    }
-    .group-image {
-        max-width: 50%;
-        height: auto;
-        border-radius: 10%;
-        margin-bottom: 10px;
-    }
-    .group-list {
-        margin-top: auto;
-        margin-bottom: auto;
-        margin-left: 1.5em;
-    }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -163,7 +37,7 @@
                     <option value="truncate">Truncate</option>
                     <option value="ceiling">Ceiling</option>
                     <option value="floor">Floor</option>
-                    <option value="nearest_even">Round to Nearest, Ties to Even</option>
+                    <option value="nearest_even" selected>Round to Nearest, Ties to Even</option>
                 </select>
             </div>
 
