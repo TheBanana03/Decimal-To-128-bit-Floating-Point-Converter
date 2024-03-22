@@ -16,6 +16,7 @@ var output_exponent_element = document.getElementById("output_exponent");
 var output_mantissa_element = document.getElementById("output_mantissa");
 var output_hex_element = document.getElementById("output_hex");
 
+var output_label_element = document.getElementById("output_label");
 var combination_field_element = document.getElementById("combination_field");
 var exponent_field_element = document.getElementById("exponent_field");
 
@@ -158,15 +159,34 @@ function splitHex() {
 
 
 // Toggle Combination Field
-function toggleCombinationField() {
+function toggleOutputMode() {
+
+    var output_label;
 
     if (input_representation === "binary") {
+
+        output_label = "Binary";
         combination_field_element.style.display = "none";
         exponent_field_element.style.width = `${100 - 16.5}%`
     } else {
+
+        output_label = "Decimal";
         combination_field_element.style.display = "flex";
         exponent_field_element.style.width = `${100 - (32 + 16.5)}%`
     }
+
+    switch (input_precision) {
+        case "single":
+            output_label += "-32";
+            break;
+        case "double":
+            output_label += "-64";
+            break;
+        case "quadruple":
+            output_label += "-128";
+            break;
+    }
+    output_label_element.innerHTML = output_label;
 }
 
 
@@ -397,8 +417,8 @@ input_form.addEventListener("submit", function (event) {
             break;
     }
 
-    // Toggle Combination Field
-    toggleCombinationField();
+    // Toggle Mode
+    toggleOutputMode();
 
     // Split and format outputs
     splitBinary();
