@@ -231,129 +231,122 @@ function convertToDecimalIEEE754() {
     }
 }
 
+function convertToLowerCase(str) {
+    // takes a string, separates it into characters, turns those lowercase, then returns it
+    return str.replace(/[A-Z]/g, function(char) { 
+        return char.toLowerCase();
+    });
+}
+
 function specialCases() {
     console.log("Test Special");
 
-    var test_input = input_decimal.trim();
+    var test_input = convertToLowerCase(input_decimal.trim());
     var test_exponent = input_exponent.trim();
-    var test_sign;
+    var test_precision = input_precision;
+    var test_representation = input_representation;
 
-    // Check the sign of the input
-    if (test_input[0] === '-') {
-        test_sign = false;
-    } 
-    
-    else if (!isNaN(test_input[0])) {
-        test_sign = true;
-    } 
+    var exponent = 0;
+    var mantissa = 0;
+    var hex = 0;
+    var exponent_limit = 0;
 
     // Check Input
     // console.log("Input Decimal:", test_input);
     // console.log("Input Exponent:", test_exponent);
-    // console.log("Input Sign:", test_sign);
+    // console.log("Input Precision:", test_precision);
+    // console.log("Input Rep:", test_representation);
 
-    // If its +0 or -0
-    if (parseFloat(test_input) === 0) {
- 
-        if(test_sign){
-            output_sign = "0"; 
-            output_hex = "0" + "x".repeat(31); 
-        }
-
-        else{
-            output_sign = "1";
-            output_hex = "8" + "x".repeat(31);  
-        }
+    // checks whether its in decimal or binary floating point format
+    switch (test_representation){
+        case "decimal":
+            switch (test_precision){
+                case "single":
+                    exponent = 6;
+                    mantissa = 20;
+                    hex = 7;
+                    exponent_limit = 90;
+                    break;
+                case "double":
+                    exponent = 8;
+                    mantissa = 50;
+                    hex = 15;
+                    exponent_limit = 369;
+                    break;
+                case "quadruple":
+                    exponent = 12;
+                    mantissa = 110;
+                    hex = 31;
+                    exponent_limit = 6111;
+                    break;
+            }
+            break;
+        case "binary":
+            switch (test_precision){
+                case "single":
         
-        output_combination = "0".repeat(5); 
-        
-        output_exponent = "x".repeat(12); 
-        output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
-
-        output_mantissa = "x".repeat(110); 
-        output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
-
-        output_hex = output_hex.match(/.{1,4}/g).join(" ");
-
-        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
-        you_are_my_special = true;
+                    break;
+                case "double":
+                    
+                    break;
+                case "quadruple":
+                    
+                    break;
+            }
+            break;
     }
 
-    // if its +Infinity or -Infinity
-    else if(test_input == "Inf"){
+
+    // if its +Infinity
+    if(test_input == "inf" || (parseInt(test_exponent) > exponent_limit && test_input.charAt(0) != '-')){
         output_sign = "0";
 
         output_combination = "1".repeat(4) + "0"; 
         
-        output_exponent = "x".repeat(12); 
+        output_exponent = "-".repeat(exponent); 
         output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
 
-        output_mantissa = "x".repeat(110); 
+        output_mantissa = "-".repeat(mantissa); 
         output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
 
-        // output_hex = "7FFF8" + "0".repeat(27);
-        // output_hex = output_hex.match(/.{1,4}/g).join(" ");
-
-        output_hex = "7" + "x".repeat(31);
+        output_hex = "7" + "-".repeat(hex);
         output_hex = output_hex.match(/.{1,4}/g).join(" ");
 
         output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
         you_are_my_special = true;
     }
-
-    else if(test_input == "-Inf"){
+    // if its -Infinity
+    else if(test_input == "-inf" || (parseInt(test_exponent) > exponent_limit && test_input.charAt(0) == '-')){
         output_sign = "1";
 
         output_combination = "1".repeat(4) + "0"; 
         
-        output_exponent = "x".repeat(12); 
+        output_exponent = "-".repeat(exponent); 
         output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
 
-        output_mantissa = "x".repeat(110); 
+        output_mantissa = "-".repeat(mantissa); 
         output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
 
-        // output_hex = "F".repeat(4) + "8" +  "0".repeat(27);
-        // output_hex = output_hex.match(/.{1,4}/g).join(" ");
-
-        output_hex = "F" + "x".repeat(31);
+        output_hex = "F" + "-".repeat(hex);
         output_hex = output_hex.match(/.{1,4}/g).join(" ");
 
         output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
         you_are_my_special = true;
     }
     
-    // if its sNan or qNan
-
-    else if(test_input == "sNaN"){
-        output_sign = "x";
-
-        output_combination = "1".repeat(5); 
-        
-        output_exponent = "1" + "x".repeat(11); 
-        output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
-
-        output_mantissa = "x".repeat(110); 
-        output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
-
-        output_hex = "x".repeat(32);
-        output_hex = output_hex.match(/.{1,4}/g).join(" ");
-
-        output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
-        you_are_my_special = true;
-    }
-
-    else if(test_input == "qNaN"){
-        output_sign = "x";
+    // if its NaN
+    else if(test_input == "nan" || test_input == "qnan" || test_input == "snan"){
+        output_sign = "-";
 
         output_combination = "1".repeat(5); 
         
-        output_exponent = "0" + "x".repeat(11); 
+        output_exponent = "-".repeat(exponent); 
         output_exponent = output_exponent.match(/.{1,4}/g).join(" ");
 
-        output_mantissa = "x".repeat(110); 
+        output_mantissa = "-".repeat(mantissa); 
         output_mantissa = output_mantissa.match(/.{1,10}/g).join(" ");
 
-        output_hex = "x".repeat(32);
+        output_hex = "-".repeat(hex);
         output_hex = output_hex.match(/.{1,4}/g).join(" ");
 
         output_binary = output_sign + " " + output_combination + " " + output_exponent + " " + output_mantissa;
