@@ -364,7 +364,9 @@ input_form.addEventListener("submit", function (event) {
 
     // Test inputs for special cases
     you_are_my_special = false
-    specialCases()
+    if (input_representation == "decimal") {
+        specialCases()
+    }
     if (you_are_my_special) {
         putOutputs();
         return;
