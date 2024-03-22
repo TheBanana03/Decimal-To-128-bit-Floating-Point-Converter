@@ -372,42 +372,45 @@ input_form.addEventListener("submit", function (event) {
     // Test inputs for special cases
     you_are_my_special = false
     specialCases()
-    
-    if(!you_are_my_special){
-        // Validate input
-        if (!window.validateInput(input_decimal)) {
-            input_error_element.style.display = "block";
-            return;
-        }
-        else {
-            input_error_element.style.display = "none";
-        }
-
-        // TODO: Convert Logic Here
-        switch (input_representation) {
-            case "binary":
-                convertToBinaryIEEE754();
-                break;
-            case "decimal":
-                convertToDecimalIEEE754();
-                break;
-        }
-
-        // Toggle Combination Field
-        toggleCombinationField();
-
-        // Split and format outputs
-        splitBinary();
-        switch (input_representation) {
-            case "binary":
-                splitBinaryBinComponents();
-                break;
-            case "decimal":
-                splitDecimalBinComponents();
-                break;
-        }
-        splitHex();
+    if (you_are_my_special) {
+        putOutputs();
+        return;
     }
+    
+    // If not special, continue with conversion
+    // Validate input
+    if (!window.validateInput(input_decimal)) {
+        input_error_element.style.display = "block";
+        return;
+    }
+    else {
+        input_error_element.style.display = "none";
+    }
+
+    // TODO: Convert Logic Here
+    switch (input_representation) {
+        case "binary":
+            convertToBinaryIEEE754();
+            break;
+        case "decimal":
+            convertToDecimalIEEE754();
+            break;
+    }
+
+    // Toggle Combination Field
+    toggleCombinationField();
+
+    // Split and format outputs
+    splitBinary();
+    switch (input_representation) {
+        case "binary":
+            splitBinaryBinComponents();
+            break;
+        case "decimal":
+            splitDecimalBinComponents();
+            break;
+    }
+    splitHex();
     
     // Display outputs
     putOutputs();
