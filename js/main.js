@@ -487,7 +487,7 @@ function specialCases() {
         }
 
         // If its +Infinity
-        else if (test_input == "inf") {
+        else if (test_input == "inf" || (parseInt(test_exponent) > exponent_limit && test_input.charAt(0) != '-')) {
             output_sign = "0";
 
             if(test_precision == "single"){
@@ -532,7 +532,7 @@ function specialCases() {
         }
 
         // If its -Infinity
-        else if (test_input == "-inf") {
+        else if (test_input == "-inf" || (parseInt(test_exponent) > exponent_limit && test_input.charAt(0) == '-')) {
             output_sign = "1";
 
             if(test_precision == "single"){
