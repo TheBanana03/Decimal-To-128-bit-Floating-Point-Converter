@@ -1,4 +1,10 @@
 # Decimal-To-128-bit-Floating-Point-Converter
+CSARCH2, S13, Group 4 Simulation Project
+Argamosa, Daniel
+Chan, Dane
+Concio, Tean
+Sia, Dominic
+
 This is a floating-point converter that takes decimal inputs and gives the floating point and hexadecimal outputs based on the 2019 edition of IEEE-754.
 
 Currently, it supports single, double, and quadruple precision outputs, with their respective special cases.
@@ -10,3 +16,5 @@ The application can be accessed through index.html if downloaded, but can also b
 https://thebanana03.github.io/Decimal-To-128-bit-Floating-Point-Converter/
 
 Thank you.
+
+Note: the deployment can sometimes be unstable, so for accurate results, please download the repository, instead.
