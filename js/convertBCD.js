@@ -45,8 +45,6 @@ class convertBCD {
             this.expDegree = 0;
             this.inputNum = "0";
         }
-
-        console.log(this.strLen);
     }
     
     process () {
@@ -62,12 +60,8 @@ class convertBCD {
         let bigBitArr = [bitArr1, bitArr2, bitArr3];
         let hexStr = "";
 
-        console.log(this.inputNum);
         this.expDegree += this.expBias;
         tempArr = this.convertToBin(this.expSize + 2, this.expDegree);
-
-        console.log(this.expDegree);
-        console.log(tempArr);
 
         bitArr1 = this.convertToBin(4, this.inputNum[0]);
 
@@ -106,9 +100,6 @@ class convertBCD {
         }
 
         hexStr = this.getOutputStr(this.outputStr);
-
-        console.log(this.outputStr);
-        console.log(hexStr);
         let binStr = this.outputStr;
 
         return {binStr, hexStr};
