@@ -369,7 +369,7 @@ function specialCases() {
     }
     
     // if its +Infinity
-    else if ((test_input == "inf" || ((test_input.replace(/\./g, '').length + parseInt(test_exponent)) > exponent_limit + 1)) && test_input.charAt(0) != '-') {
+    else if ((test_input == "inf" || (((test_input.replace(/\./g, '').length + parseInt(test_exponent)) > exponent_limit + 1)) && test_input.charAt(0) != '-' && /^[0-9]+$/.test(test_input))) {
         output_sign = "0";
 
         output_combination = "1".repeat(4) + "0"; 
@@ -387,7 +387,7 @@ function specialCases() {
         you_are_my_special = true;
     }
     // if its -Infinity
-    else if(test_input == "-inf" || (test_input.replace(/[.-]/g, '').length + parseInt(test_exponent) > exponent_limit + 1 && test_input.charAt(0) == '-')){
+    else if((test_input == "-inf" || (((test_input.replace(/[.-]/g, '').length + parseInt(test_exponent)) > exponent_limit + 1) && test_input.charAt(0) == '-' && /^[0-9]+$/.test(test_input)))){
         output_sign = "1";
 
         output_combination = "1".repeat(4) + "0"; 
