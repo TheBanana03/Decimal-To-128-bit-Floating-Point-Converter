@@ -118,7 +118,6 @@ class convert {
             intBits.push(intBitsTemp.pop());
         }
         
-        let isZero = 0;
         // Normalize input
         if (lessOne != 1) {
             for (i = 0; i < countBits - 1; i++) {
@@ -127,29 +126,30 @@ class convert {
             }
         }
         else {
-            let tempSize = this.expSize;
+            let dnrmCnt = 0;
+            let tempDeg = this.expDegree;
             while (lessOne == 1) {
                 temp = frcBits.pop();
                 if (temp == 1) {
                     lessOne = 0
                 }
-                this.expDegree--;
-                if (this.expDegree <= this.expBias * -1) {
-                    console.log(this.expDegree);
-                    this.expSize++;
+                tempDeg--;
+                if (tempDeg <= this.expBias * -1) {
+                    console.log(tempDeg);
+                    dnrmCnt++;
                 }
-                if (this.expSize >= this.bitSize - 1) {
-                    isZero = 1;
-                    console.log(this.expSize + " " + tempSize);
-                    console.log(this.expDegree);
-                    this.expDegree = this.expBias * -1;
-                    this.expSize = tempSize;
+                if (dnrmCnt + this.expSize > this.bitSize - 1) {
                     break;
                 }
             }
-        }
-        if (this.expDegree == this.expBias * -1 && !isZero) {
-            this.expDegree--;
+            if (dnrmCnt > 0) {
+                frcBits.push(1);
+                for (i = 1; i < dnrmCnt; i++) {
+                    frcBits.push(0);
+                }
+                tempDeg = this.expBias * -1;
+            }
+            this.expDegree = tempDeg;
         }
         console.log(this.expDegree);
         console.log(this.expSize);
@@ -157,6 +157,7 @@ class convert {
 
         // Get binary representation for exponent
         let expBits = this.convertToBin(this.expSize, (this.expDegree + this.expBias).toString());
+        console.log(expBits.toString());
 
         this.pushToOutput (expBits, frcBits);
         // this.printOutput ();
@@ -341,7 +342,7 @@ class convert {
             }
 
             i++;
-            if (i > this.expBias + this.bitSize) {
+            if (i > this.expBias + this.bitSize * 2) {
                 break;
             }
         }
