@@ -2,7 +2,6 @@ const BigNumber = window.BigNumber;
 
 class convert {
     constructor(inputNum, expDegree, precision, round) {
-        console.log(inputNum);
         this.expDegree = expDegree;
         this.outputArr = [];
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
@@ -50,7 +49,6 @@ class convert {
 
         if (expDegree < 0) {
             this.inputStr = inputNum + "e" + expDegree;
-            console.log(this.inputStr);
             this.inputNum = new BigNumber(this.inputStr);
         }
         else {
@@ -86,8 +84,6 @@ class convert {
         let i = 0;
         let lessOne = 0;
         let temp = 0;
-
-        console.log(this.inputNum.toString());
 
         // Count the number of bits used for the integer
         while (tempNum >= 2) {
@@ -135,7 +131,6 @@ class convert {
                 }
                 tempDeg--;
                 if (tempDeg <= this.expBias * -1) {
-                    console.log(tempDeg);
                     dnrmCnt++;
                 }
                 if (dnrmCnt + this.expSize > this.bitSize - 1) {
@@ -151,13 +146,9 @@ class convert {
             }
             this.expDegree = tempDeg;
         }
-        console.log(this.expDegree);
-        console.log(this.expSize);
-        console.log(this.expDegree + this.expBias);
 
         // Get binary representation for exponent
         let expBits = this.convertToBin(this.expSize, (this.expDegree + this.expBias).toString());
-        console.log(expBits.toString());
 
         this.pushToOutput (expBits, frcBits);
         // this.printOutput ();
@@ -165,8 +156,6 @@ class convert {
         // Return binary and hex strings
         var {binStr, hexStr} = this.getOutputStr();
 
-        console.log(binStr);
-        console.log(hexStr);
         return {binStr, hexStr};
     }
 
@@ -174,7 +163,6 @@ class convert {
     chckInf () {
         let tempNum = new BigNumber(this.inputNum.toString());
         let maxLimit = new BigNumber(this.maxLimit);
-        console.log(tempNum.toString());
         if (tempNum.abs().gt(maxLimit)) {
             return "inf";
         }
@@ -251,8 +239,6 @@ class convert {
         let zeroCnt = 0;
         let i = 0;
 
-        console.log(arrLen);
-
         // Count Zeroes
         if (frstBit == 1) {
             for (i = 0; i < arrLen; i++) {
@@ -270,9 +256,6 @@ class convert {
         else {
             rndStr = "Lesser";
         }
-
-        console.log(i);
-        console.log(rndStr);
 
         return rndStr;
     }
@@ -309,7 +292,6 @@ class convert {
         for (i = 0; i < this.bitSize; i++) {
             process.stdout.write(this.outputArr[i].toString());
         }
-        console.log();
         for (i = 0; i < this.hexSize; i++) {
             process.stdout.write(this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]));
         }

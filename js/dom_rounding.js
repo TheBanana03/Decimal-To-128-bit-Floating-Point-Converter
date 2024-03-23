@@ -104,10 +104,6 @@ function roundDecimal(input, roundTo, rounding, exp) {
         exponent = 0
     }
 
-    console.log(integer)
-    console.log(exponent)
-    console.log(positive)
-
     return {integer, exponent, positive}
 }
 
