@@ -2,8 +2,6 @@ const BigNumber = window.BigNumber;
 
 class convert {
     constructor(inputNum, expDegree, precision, round) {
-        console.log(inputNum);
-        this.inputNum = new BigNumber(inputNum);
         this.expDegree = expDegree;
         this.outputArr = [];
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
@@ -24,41 +22,45 @@ class convert {
                 break;
         }
 
-        console.log(this.roundMthd);
-
         switch (precision) {
 
             case "single":
                 precision = 1;
                 this.expBias = 127;
                 this.expSize = 8;
-                this.maxLimit = "3.4028235e38";
                 break;
 
             case "double":
                 precision = 2;
                 this.expBias = 1023;
                 this.expSize = 11;
-                this.maxLimit = "1.8e+308";
                 break;
 
             case "quadruple":
                 precision = 4;
                 this.expBias = 16383;
                 this.expSize = 15;
-                this.maxLimit = "1.8e+3008";
                 break;
         }
 
         this.bitSize = precision * 32;
         this.hexSize = this.bitSize / 4;
+        this.maxLimit = new BigNumber("2").exponentiatedBy(this.expBias + 1).minus(1);
 
-        this.inputNum = this.inputNum.times(BigNumber(10).exponentiatedBy(this.expDegree));
+        if (expDegree < 0) {
+            this.inputStr = inputNum + "e" + expDegree;
+            this.inputNum = new BigNumber(this.inputStr);
+        }
+        else {
+            this.inputNum = new BigNumber(inputNum);
+            this.inputNum = this.inputNum.times(BigNumber(10).exponentiatedBy(this.expDegree));
+        }
+
         this.expDegree = 0;
     }
     
     process () {
-        let isCase = this.chckSpecial();
+        let isCase = this.chckInf();
 
         if (isCase == "inf") {
             if (this.inputNum < 0) {
@@ -83,8 +85,6 @@ class convert {
         let lessOne = 0;
         let temp = 0;
 
-        console.log(this.inputNum.toString());
-
         // Count the number of bits used for the integer
         while (tempNum >= 2) {
             tempNum = tempNum.dividedBy(2);
@@ -103,7 +103,6 @@ class convert {
 
         // Get binary representation for fractional portion
         let frcPart = this.inputNum.abs() - this.inputNum.abs().integerValue(BigNumber.ROUND_FLOOR);
-        console.log (frcPart);
         let frcBitsTemp = this.convertFract(frcPart);
         let frcBits = [];
 
@@ -123,17 +122,33 @@ class convert {
             }
         }
         else {
+            let dnrmCnt = 0;
+            let tempDeg = this.expDegree;
             while (lessOne == 1) {
-                temp = frcBits.pop()
+                temp = frcBits.pop();
                 if (temp == 1) {
                     lessOne = 0
                 }
-                this.expDegree--;
+                tempDeg--;
+                if (tempDeg <= this.expBias * -1) {
+                    dnrmCnt++;
+                }
+                if (dnrmCnt + this.expSize > this.bitSize - 1) {
+                    break;
+                }
             }
+            if (dnrmCnt > 0) {
+                frcBits.push(1);
+                for (i = 1; i < dnrmCnt; i++) {
+                    frcBits.push(0);
+                }
+                tempDeg = this.expBias * -1;
+            }
+            this.expDegree = tempDeg;
         }
 
         // Get binary representation for exponent
-        let expBits = this.convertToBin(this.expSize, this.expDegree + this.expBias);
+        let expBits = this.convertToBin(this.expSize, (this.expDegree + this.expBias).toString());
 
         this.pushToOutput (expBits, frcBits);
         // this.printOutput ();
@@ -141,16 +156,13 @@ class convert {
         // Return binary and hex strings
         var {binStr, hexStr} = this.getOutputStr();
 
-        console.log(binStr);
-        console.log(hexStr);
         return {binStr, hexStr};
     }
 
-    // Checks for special cases
-    chckSpecial () {
+    // Checks for infinity
+    chckInf () {
         let tempNum = new BigNumber(this.inputNum.toString());
         let maxLimit = new BigNumber(this.maxLimit);
-        console.log(tempNum.toString());
         if (tempNum.abs().gt(maxLimit)) {
             return "inf";
         }
@@ -227,8 +239,6 @@ class convert {
         let zeroCnt = 0;
         let i = 0;
 
-        console.log(arrLen);
-
         // Count Zeroes
         if (frstBit == 1) {
             for (i = 0; i < arrLen; i++) {
@@ -246,9 +256,6 @@ class convert {
         else {
             rndStr = "Lesser";
         }
-
-        console.log(i);
-        console.log(rndStr);
 
         return rndStr;
     }
@@ -285,7 +292,6 @@ class convert {
         for (i = 0; i < this.bitSize; i++) {
             process.stdout.write(this.outputArr[i].toString());
         }
-        console.log();
         for (i = 0; i < this.hexSize; i++) {
             process.stdout.write(this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]));
         }
@@ -295,7 +301,7 @@ class convert {
     convertToBin (bitSize, tempNum) {
         let i = 0;
         let dstArr = [];
-        let srcNum = new BigNumber(tempNum.toString());
+        let srcNum = new BigNumber(tempNum.toString()).abs();
         
         for (i = 0; i < bitSize; i++) {
             dstArr.push(srcNum % 2);
@@ -312,13 +318,13 @@ class convert {
         let srcNum = new BigNumber(tmpNum.toString())
         while (srcNum != 0) {
             srcNum = srcNum.times(2);
-            dstArr.push(srcNum.integerValue(BigNumber.ROUND_FLOOR));
-            if (srcNum.integerValue(BigNumber.ROUND_FLOOR).gt(0)) {
+            dstArr.push(srcNum.integerValue(BigNumber.ROUND_FLOOR).abs());
+            if (srcNum.integerValue(BigNumber.ROUND_FLOOR).abs().gt(0)) {
                 srcNum = srcNum.minus(1);
             }
 
             i++;
-            if (i > this.bitSize + this.expSize) {
+            if (i > this.expBias + this.bitSize * 2) {
                 break;
             }
         }

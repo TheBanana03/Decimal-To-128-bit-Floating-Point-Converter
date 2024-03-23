@@ -40,7 +40,11 @@ class convertBCD {
         let expLim = ((Math.pow(2, this.expSize + 2) - Math.pow(2, this.expSize))) - 1;
         let expOffset = Math.pow(2, precision + (precision % 3) + (precision % 2)) - (4 - precision);
         this.expBias = expLim - parseInt(expLim / 2) + expOffset;
-        console.log(this.strLen);
+
+        if (this.expDegree < this.expBias * -1) {
+            this.expDegree = 0;
+            this.inputNum = "0";
+        }
     }
     
     process () {
@@ -56,12 +60,8 @@ class convertBCD {
         let bigBitArr = [bitArr1, bitArr2, bitArr3];
         let hexStr = "";
 
-        console.log(this.inputNum);
         this.expDegree += this.expBias;
         tempArr = this.convertToBin(this.expSize + 2, this.expDegree);
-
-        console.log(this.expDegree);
-        console.log(tempArr);
 
         bitArr1 = this.convertToBin(4, this.inputNum[0]);
 
@@ -100,9 +100,6 @@ class convertBCD {
         }
 
         hexStr = this.getOutputStr(this.outputStr);
-
-        console.log(this.outputStr);
-        console.log(hexStr);
         let binStr = this.outputStr;
 
         return {binStr, hexStr};
