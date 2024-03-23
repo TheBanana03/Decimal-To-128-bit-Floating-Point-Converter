@@ -118,6 +118,7 @@ class convert {
             intBits.push(intBitsTemp.pop());
         }
         
+        let isZero = 0;
         // Normalize input
         if (lessOne != 1) {
             for (i = 0; i < countBits - 1; i++) {
@@ -134,17 +135,25 @@ class convert {
                 }
                 this.expDegree--;
                 if (this.expDegree <= this.expBias * -1) {
+                    console.log(this.expDegree);
                     this.expSize++;
                 }
                 if (this.expSize >= this.bitSize - 1) {
-                    console.log("Zero");
+                    isZero = 1;
+                    console.log(this.expSize + " " + tempSize);
+                    console.log(this.expDegree);
                     this.expDegree = this.expBias * -1;
                     this.expSize = tempSize;
                     break;
                 }
             }
         }
+        if (this.expDegree == this.expBias * -1 && !isZero) {
+            this.expDegree--;
+        }
         console.log(this.expDegree);
+        console.log(this.expSize);
+        console.log(this.expDegree + this.expBias);
 
         // Get binary representation for exponent
         let expBits = this.convertToBin(this.expSize, (this.expDegree + this.expBias).toString());
@@ -309,7 +318,7 @@ class convert {
     convertToBin (bitSize, tempNum) {
         let i = 0;
         let dstArr = [];
-        let srcNum = new BigNumber(tempNum.toString());
+        let srcNum = new BigNumber(tempNum.toString()).abs();
         
         for (i = 0; i < bitSize; i++) {
             dstArr.push(srcNum % 2);
@@ -326,13 +335,13 @@ class convert {
         let srcNum = new BigNumber(tmpNum.toString())
         while (srcNum != 0) {
             srcNum = srcNum.times(2);
-            dstArr.push(srcNum.integerValue(BigNumber.ROUND_FLOOR));
-            if (srcNum.integerValue(BigNumber.ROUND_FLOOR).gt(0)) {
+            dstArr.push(srcNum.integerValue(BigNumber.ROUND_FLOOR).abs());
+            if (srcNum.integerValue(BigNumber.ROUND_FLOOR).abs().gt(0)) {
                 srcNum = srcNum.minus(1);
             }
 
             i++;
-            if (i > this.expBias) {
+            if (i > this.expBias + this.bitSize) {
                 break;
             }
         }
