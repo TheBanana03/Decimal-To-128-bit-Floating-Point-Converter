@@ -36,10 +36,11 @@ var output_hex = output_hex_element.value;
 
 var you_are_my_special = false;
 
-var input_positive = true;
+var input_positive;
 
 var og_input_decimal = input_decimal;
 var og_input_exponent = input_exponent;
+var og_input_positive;
 
 // Get Inputs and Put Outputs
 function getInputs() {
@@ -51,15 +52,15 @@ function getInputs() {
     input_representation = input_representation_element.value;
     input_precision = input_precision_element.value;
 
-    if (input_decimal[0] === "-") {
+    if (input_decimal[0] !== "-") {
         input_positive = false;
-        input_decimal = input_decimal.slice(1);
     } else {
         input_positive = true;
     }
 
     og_input_decimal = input_decimal;
     og_input_exponent = input_exponent;
+    og_input_positive = input_positive;
 }
 
 function putOutputs() {
@@ -527,10 +528,10 @@ download_txt.addEventListener("click", function () {
     // Declare text
     var text = "";
     text += `Input Decimal: `;
-    if (input_positive) { text += "-"; }
+    if (og_input_positive) { text += "-"; }
     text += `${og_input_decimal} x 10 ^ ${og_input_exponent}\n`;
     text += `Rounded Decimal: `;
-    if (input_positive) { text += "-"; }
+    if (og_input_positive) { text += "-"; }
     text += `${input_decimal} x 10 ^ ${input_exponent}\n`;
     text += `Rounding Method: ${input_rounding}\n`;
     text += `Representation: ${input_representation.charAt(0).toUpperCase() + input_representation.slice(1)}\n`;
