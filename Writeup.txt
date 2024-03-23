@@ -1,3 +1,9 @@
+CSARCH2, S13, Group 4
+Argamosa, Daniel
+Chan, Dane
+Concio, Tean
+Sia, Dominic
+
 The code is relatively simple due to the nature of the Densely-Packed BCD conversion, as most of the cases 
 in a given 3-digit number could be hardcoded. However, in an attempt to reduce the amount of bloat within 
 the codebase, most of the BCD cases were not decided through an obscene amount of if statements.
@@ -19,11 +25,29 @@ traditional data types. This was easily circumvented with the decimal floating p
 representations of the mantissa are based on the provided digits and not their actual values.
 That is to say, in order to convert the digits into their respective densely packed BCD representations, 
 they only needed to be stored in a string, wherein the characters can be iterated upon to find the BCD 
-representation of every three digits. For the binary floating point representation, however, the actual 
-value is needed, thus requiring the use of larger data types in order to store the input. Fortunately, 
-in most high level programming languages, including Javascript, there is often a library that can store 
-bigger numbers. In the case of this project in particular, this library is the bignumber library, which 
-stores numbers as strings and therefore eliminates the restriction on the values. However, since the 
-bignumber library is a nodeJS module, and setting up nodeJS just for this singular library is impractical, 
-the library's logic was extracted and transferred to a local file, allowing for easy use without the need 
-to install other modules.
+representation of every three digits.
+
+For example, in the rounding of the initial input so as to accommodate the respective digit limits of
+the input, a string was used to take the input, and regular expressions were used to manipulate the string.
+However, the formulation of these regular expressions proved to be quite the ordeal, possibly due to the
+lack of experience with handling them, but through brainstorming and repeated trial and error, the proper
+regular expressions were formulated and used. Besides that, there were plenty of edge cases when rounding
+the digits, which made them quite difficult to trace or manage, so the codebase was changed to accommodate
+these edge cases.
+
+The storing of the input value as a string also helped with the formulation of the special cases. These cases,
+such as infinity and not a number (NaN), could be easily checked if a string, instead of a floating point, were
+to be passed into the function itself. This is because the app also allows the strings "inf" and "nan" as inputs,
+which allowed for easy checking. For less apparent special cases, such as numbers that are above the maximum
+possible number (which should become infinity), the value was manually checked and compared. As an aside, there
+was also a minor disagreement about the representation of the unimportant variables in these special cases, such
+as the exponent continuation bits or the coefficient representation bits, as some members wanted to represent them
+as "X" or "-", while others wanted to use "0". In the end, the team decided to use "0".
+
+For the binary floating point representation, however, the actual value is needed, thus requiring the use 
+of larger data types in order to store the input. Fortunately, in most high level programming languages,
+including Javascript, there is often a library that can store bigger numbers. In the case of this project 
+in particular, this library is the bignumber library, which stores numbers as strings and therefore 
+eliminates the restriction on the values. However, since the bignumber library is a nodeJS module, and 
+setting up nodeJS just for this singular library is impractical, the library's logic was extracted and 
+transferred to a local file, allowing for easy use without the need to install other modules.
