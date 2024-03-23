@@ -3,7 +3,6 @@ const BigNumber = window.BigNumber;
 class convert {
     constructor(inputNum, expDegree, precision, round) {
         console.log(inputNum);
-        this.inputNum = new BigNumber(inputNum);
         this.expDegree = expDegree;
         this.outputArr = [];
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
@@ -24,41 +23,46 @@ class convert {
                 break;
         }
 
-        console.log(this.roundMthd);
-
         switch (precision) {
 
             case "single":
                 precision = 1;
                 this.expBias = 127;
                 this.expSize = 8;
-                this.maxLimit = "3.4028235e38";
                 break;
 
             case "double":
                 precision = 2;
                 this.expBias = 1023;
                 this.expSize = 11;
-                this.maxLimit = "1.8e+308";
                 break;
 
             case "quadruple":
                 precision = 4;
                 this.expBias = 16383;
                 this.expSize = 15;
-                this.maxLimit = "1.8e+3008";
                 break;
         }
 
         this.bitSize = precision * 32;
         this.hexSize = this.bitSize / 4;
+        this.maxLimit = new BigNumber("2").exponentiatedBy(this.expBias + 1).minus(1);
 
-        this.inputNum = this.inputNum.times(BigNumber(10).exponentiatedBy(this.expDegree));
+        if (expDegree < 0) {
+            this.inputStr = inputNum + "e" + expDegree;
+            console.log(this.inputStr);
+            this.inputNum = new BigNumber(this.inputStr);
+        }
+        else {
+            this.inputNum = new BigNumber(inputNum);
+            this.inputNum = this.inputNum.times(BigNumber(10).exponentiatedBy(this.expDegree));
+        }
+
         this.expDegree = 0;
     }
     
     process () {
-        let isCase = this.chckSpecial();
+        let isCase = this.chckInf();
 
         if (isCase == "inf") {
             if (this.inputNum < 0) {
@@ -103,7 +107,6 @@ class convert {
 
         // Get binary representation for fractional portion
         let frcPart = this.inputNum.abs() - this.inputNum.abs().integerValue(BigNumber.ROUND_FLOOR);
-        console.log (frcPart);
         let frcBitsTemp = this.convertFract(frcPart);
         let frcBits = [];
 
@@ -123,17 +126,28 @@ class convert {
             }
         }
         else {
+            let tempSize = this.expSize;
             while (lessOne == 1) {
-                temp = frcBits.pop()
+                temp = frcBits.pop();
                 if (temp == 1) {
                     lessOne = 0
                 }
                 this.expDegree--;
+                if (this.expDegree <= this.expBias * -1) {
+                    this.expSize++;
+                }
+                if (this.expSize >= this.bitSize - 1) {
+                    console.log("Zero");
+                    this.expDegree = this.expBias * -1;
+                    this.expSize = tempSize;
+                    break;
+                }
             }
         }
+        console.log(this.expDegree);
 
         // Get binary representation for exponent
-        let expBits = this.convertToBin(this.expSize, this.expDegree + this.expBias);
+        let expBits = this.convertToBin(this.expSize, (this.expDegree + this.expBias).toString());
 
         this.pushToOutput (expBits, frcBits);
         // this.printOutput ();
@@ -146,8 +160,8 @@ class convert {
         return {binStr, hexStr};
     }
 
-    // Checks for special cases
-    chckSpecial () {
+    // Checks for infinity
+    chckInf () {
         let tempNum = new BigNumber(this.inputNum.toString());
         let maxLimit = new BigNumber(this.maxLimit);
         console.log(tempNum.toString());
@@ -318,7 +332,7 @@ class convert {
             }
 
             i++;
-            if (i > this.bitSize + this.expSize) {
+            if (i > this.expBias) {
                 break;
             }
         }
